@@ -15,8 +15,8 @@ class Data:
         self.data_dict = {}
         self.load_data()  # load raw data frames
 
-        self.test_dict = None
-        self.train_dict = None
+        self.test_dict = {}
+        self.train_dict = {}
         self.split_data()  # split data into testing and training sets
 
         if self.pre_process_data() is False:
@@ -33,7 +33,7 @@ class Data:
         # Classification
         self.data_dict["abalone"] = pd.read_csv(r'data/abalone.data', header=None)
         self.data_dict["car"] = pd.read_csv(r'data/car.data', header=None)
-        self.data_dict["segmentation"] = pd.read_csv(r'data/segmentation.data', header=None)
+        # self.data_dict["segmentation"] = pd.read_csv(r'data/segmentation.data', header=None)
         # Regression
         self.data_dict["machine"] = pd.read_csv(r'data/machine.data', header=None)
         self.data_dict["forest_fires"] = pd.read_csv(r'data/forestfires.data', header=None)
@@ -56,8 +56,9 @@ class Data:
             # use numpys split with pandas sample to randomly split the data
             training_data_temp, test_data_temp = np.split(data_set.sample(frac=1), [int(.8 * len(data_set))])
             # add training/testing data into dictionary with corresponding data set name
-            self.train_dict[data_set_name] = training_data_temp
-            self.test_dict[data_set_name] = test_data_temp
+            if training_data_temp is not None and test_data_temp is not None:
+                self.train_dict[data_set_name] = training_data_temp
+                self.test_dict[data_set_name] = test_data_temp
 
 
     def k_fold(self, k_val):

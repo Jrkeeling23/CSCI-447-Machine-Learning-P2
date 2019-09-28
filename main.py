@@ -27,3 +27,18 @@ def main():
                 # give query example and its corresponding train_data_set, along with # of desired neighbors to consider
                 predicted_class[key].append(knn.perform_knn(query_point, train_data_set, 5))
 
+
+def test():
+    knn = KNN()
+    data = Data()  # loads the data and checks if complete
+    data.split_data()
+    for names, data in data.test_dict.items():
+        print(names, "\n", data)
+
+
+testing = True
+if __name__ == "__main__":
+    if testing:
+        test()
+    else:
+        main()
