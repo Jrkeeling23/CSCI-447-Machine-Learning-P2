@@ -26,7 +26,7 @@ class KNN:
             else:
                 distance_list.append(self.euclidean_distance(query_point, row))  # all features of x to a euclidean.
         distance_list.sort(reverse=False)  # sort high to low
-        distance_list = distance_list[1:k_val]  # get k closest neighbors
+        distance_list = distance_list[1:k_val+1]  # get k closest neighbors
         print(distance_list)
         # TODO return self.predict_by_distance(distance_list.sort(reverse=True))  # Predict by closest neighbors
         pass
