@@ -32,9 +32,9 @@ def test():
     knn = KNN()
     data = Data()  # loads the data and checks if complete
     data.split_data()
-    for names, data in data.test_dict.items():
-        print(names, "\n", data)
-
+    for names, data_set in data.test_dict.items():
+        print("test size = ", data_set.shape)
+        print("train size = ", data.train_dict[names].shape)
 
 testing = True
 if __name__ == "__main__":
