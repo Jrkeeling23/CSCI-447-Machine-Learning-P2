@@ -18,20 +18,26 @@ class KNN:
         """
         distance_list = []
         for index, row in train_data.iterrows():  # iterate through all data and get distances
-            distance_list.append(self.euclidean_distance(query_point, row, k_val))  # all features of an example to function
-        return self.predict_by_distance(distance_list.sort(reverse=True))  # Predict by closest neighbors
+            distance_list.append(self.euclidean_distance(query_point, row))  # all features of x to a euclidean.
+        distance_list.sort(reverse=True)  # sort high to low
+        distance_list = distance_list[0:k_val]  # get k closest neighbors
 
-    def euclidean_distance(self, query_point, comparison_point, k_val):
+        # TODO return self.predict_by_distance(distance_list.sort(reverse=True))  # Predict by closest neighbors
+        pass
+
+    def euclidean_distance(self, query_point, comparison_point):
         """
         With multi dimensions: sqrt((x2-x1)+(y2-y1)+(z2-z1)+...))
         :param query_point: Testing example.
         :param comparison_point: example in training data.
         :return: float distance
         """
-        feature_vector = []
+        temp_add = 0  # (x2-x1)^2 + (y2 - y1)^2 ; addition part
         for feature_col in range(len(query_point)):
-            # TODO: Iterate through each feature within points and find distance
-            pass
+            if type(query_point[feature_col]) is float:
+                temp_sub = (query_point[feature_col] - comparison_point[feature_col]) ** 2  # square
+                temp_add += temp_sub
+        return temp_add ** (1 / 2)
 
     def predict_by_distance(self, distance_list):
         """

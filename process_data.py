@@ -45,6 +45,7 @@ class Data:
         :return: Boolean TODO: Or just fix in here
         """
         # TODO: Ensure that the data is complete
+        # TODO: REFORMAT S.T LABEL IS ALWAYS LAST
         pass
 
     def split_data(self):
