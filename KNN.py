@@ -18,10 +18,16 @@ class KNN:
         """
         distance_list = []
         for index, row in train_data.iterrows():  # iterate through all data and get distances
-            distance_list.append(self.euclidean_distance(query_point, row))  # all features of x to a euclidean.
-        distance_list.sort(reverse=True)  # sort high to low
-        distance_list = distance_list[0:k_val]  # get k closest neighbors
-
+            if len(distance_list) is k_val+1:  # keep list of size k
+                distance_list.sort(reverse=True)  # least to greatest
+                distance = self.euclidean_distance(query_point, row)  # check first spot
+                if distance_list[0] > distance:
+                    distance_list[0] = distance  # swap value to closer neighbor
+            else:
+                distance_list.append(self.euclidean_distance(query_point, row))  # all features of x to a euclidean.
+        distance_list.sort(reverse=False)  # sort high to low
+        distance_list = distance_list[1:k_val]  # get k closest neighbors
+        print(distance_list)
         # TODO return self.predict_by_distance(distance_list.sort(reverse=True))  # Predict by closest neighbors
         pass
 
@@ -34,10 +40,11 @@ class KNN:
         """
         temp_add = 0  # (x2-x1)^2 + (y2 - y1)^2 ; addition part
         for feature_col in range(len(query_point)):
-            if type(query_point[feature_col]) is float:
-                temp_sub = (query_point[feature_col] - comparison_point[feature_col]) ** 2  # square
-                temp_add += temp_sub
-        return temp_add ** (1 / 2)
+            if type(query_point[feature_col]) is float or type(query_point[feature_col]) is int:
+                temp_sub = (query_point[feature_col] - comparison_point[feature_col]) ** 2  # x2 -x1 and square
+                temp_add += temp_sub  # continuously add until square root
+
+        return temp_add ** (1 / 2)  # square root
 
     def predict_by_distance(self, distance_list):
         """
