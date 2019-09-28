@@ -13,11 +13,11 @@ class Data:
         Initializes data dictionary, which holds the data frames alongside there names.
         """
         self.data_dict = {}
-        self.load_data()
-        # TODO: split data will set test/train_dict equal to appropriate data.
+        self.load_data()  # load raw data frames
+
         self.test_dict = None
         self.train_dict = None
-        # TODO: Should we have dict for test and train data?
+        self.split_data()  # split data into testing and training sets
 
         if self.pre_process_data() is False:
             # TODO: complete the data
@@ -52,8 +52,13 @@ class Data:
         Split data for testing and training
         :return:
         """
-        # TODO: Split data accordingly... Not sure the exact percent needed for test data
-        pass
+        for data_set_name, data_set in self.data_dict.items():  # iterate through
+            # use numpys split with pandas sample to randomly split the data
+            training_data_temp, test_data_temp = np.split(data_set.sample(frac=1), [int(.8 * len(data_set))])
+            # add training/testing data into dictionary with corresponding data set name
+            self.train_dict[data_set_name] = training_data_temp
+            self.test_dict[data_set_name] = test_data_temp
+
 
     def k_fold(self, k_val):
         """
