@@ -53,17 +53,18 @@ class KNN:
         :return: Predicted class
         """
         # TODO: Determine class
+        nearest_neighbor = distance_list[0] # Sets the current pick to the first value in the list
         predict_dictionary = {} # Temp dictionary to keep track of counts
         for class_obj in distance_list: # Loops through the input list to create a dictionary with values being count of classes
             if class_obj in predict_dictionary.keys(): # Increases count if key exists
                 predict_dictionary[class_obj] += 1
+                if predict_dictionary[nearest_neighbor] < predict_dictionary[class_obj]:
+                    nearest_neighbor = class_obj  # Sets the nearest neighbor to the class that occurs most.
             else: # Create key and set count to 1
                 predict_dictionary[class_obj] = 1
-        nearest_neighbor = distance_list[0] # Sets the current pick to the first value in the list
-        for class_string in predict_dictionary.keys(): # Loop through the keys and find the most occurring class
-            if predict_dictionary[nearest_neighbor] < predict_dictionary[class_string]:
-                nearest_neighbor = class_string # Sets the nearest neighbor to the class that occurs most.
+
         # TODO Deal with two neighbors who have the same value count.
+
         return nearest_neighbor
 
     def edit_data(self):
