@@ -29,7 +29,7 @@ class KNN:
         distance_list = distance_list[1:k_val+1]  # get k closest neighbors
         print(distance_list)
         # TODO return self.predict_by_distance(distance_list.sort(reverse=True))  # Predict by closest neighbors
-        return self.predict_by_distance(distance_list)
+        return self.predict_by_distance(distance_list.sort(reverse=True))
 
     def euclidean_distance(self, query_point, comparison_point):
         """
