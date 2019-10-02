@@ -52,9 +52,8 @@ class KNN:
         :param distance_list:
         :return: Predicted class
         """
-        conflict = True # variable to loop until nearest neighbor conflict rectified.
         loop_iterator_location = len(distance_list) # Variable changes if nearest neighbor conflict.
-        while conflict:
+        while True:
             nearest_neighbor = distance_list[0] # Sets the current pick to the first value in the list
             predict_dictionary = {} # Temp dictionary to keep track of counts
             for class_obj in distance_list[:loop_iterator_location]: # Loops through the input list to create a dictionary with values being count of classes
@@ -66,7 +65,7 @@ class KNN:
                     predict_dictionary[class_obj] = 1 # Create key and set count to 1
             check_duplicates = list(predict_dictionary.values()) # Create a list to use the count function
             if check_duplicates.count(predict_dictionary[nearest_neighbor]) == 1: # Sets conflict to False if the count of the top class occurrences is the only class sharing that count
-                conflict = False
+                break
             else:
                 loop_iterator_location -= 1 # By reducing the loop iterator, we remove the furthest neighbor from our counts.
 
