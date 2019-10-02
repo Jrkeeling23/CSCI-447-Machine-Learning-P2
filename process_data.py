@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-
+import csv
 
 class Data:
     """
@@ -12,6 +12,7 @@ class Data:
         Keep the data and functions handling data private (denoted with __ )!
         Initializes data dictionary, which holds the data frames alongside there names.
         """
+        # label = ['Age', ,
         self.data_dict = {}
         self.load_data()  # load raw data frames
 
@@ -30,11 +31,11 @@ class Data:
         Loads data into a dictionary
         :return: None
         """
-        # Classification
+        # Classification/home/justin/Desktop/ml_p2
         self.data_dict["abalone"] = pd.read_csv(r'data/abalone.data', header=None)
         self.data_dict["car"] = pd.read_csv(r'data/car.data', header=None)
         # TODO Load segmentation data
-        # self.data_dict["segmentation"] = pd.read_csv(r'data/segmentation.data', header=None)
+        self.data_dict["segmentation"] = pd.read_csv(r'data/segmentation.data', header=1, skiprows=[0])
         # Regression
         self.data_dict["machine"] = pd.read_csv(r'data/machine.data', header=None)
         self.data_dict["forest_fires"] = pd.read_csv(r'data/forestfires.data', header=None)

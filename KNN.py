@@ -18,6 +18,7 @@ class KNN:
         """
         print("\n-----------------Performing KNN-----------------")
         distance_list = []
+        label_list = []
         for index, row in train_data.iterrows():  # iterate through all data and get distances
             if len(distance_list) is k_val + 1:  # keep list of size k
                 distance_list.sort(reverse=True)  # least to greatest

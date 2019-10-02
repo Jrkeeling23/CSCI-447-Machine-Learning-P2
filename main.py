@@ -33,9 +33,9 @@ def test():
     data = Data()  # loads the data and checks if complete
     data.split_data()
     k_neighbors = 5
-    for names, data_set in data.test_dict.items():
-        print("test size = ", data_set.shape)
-        print("train size = ", data.train_dict[names].shape)
+    class_labels = [8,6 ]
+    for names, data_set in data.train_dict.items():
+        print(data.train_dict['segmentation'])
         # knn.perform_knn(k_neighbors)
 testing = True
 if __name__ == "__main__":
