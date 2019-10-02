@@ -63,6 +63,7 @@ class KNN:
         for class_string in predict_dictionary.keys(): # Loop through the keys and find the most occurring class
             if predict_dictionary[nearest_neighbor] < predict_dictionary[class_string]:
                 nearest_neighbor = class_string # Sets the nearest neighbor to the class that occurs most.
+        # TODO Deal with two neighbors who have the same value count.
         return nearest_neighbor
 
     def edit_data(self):
