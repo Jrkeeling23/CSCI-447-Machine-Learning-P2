@@ -32,11 +32,12 @@ def test():
     knn = KNN()
     data = Data()  # loads the data and checks if complete
     data.split_data()
+    k_neighbors = 5
     for names, data_set in data.test_dict.items():
         print("test size = ", data_set.shape)
         print("train size = ", data.train_dict[names].shape)
-
-testing = False
+        # knn.perform_knn(k_neighbors)
+testing = True
 if __name__ == "__main__":
     if testing:
         test()

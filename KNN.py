@@ -16,20 +16,21 @@ class KNN:
         :param train_data:  all data to "query" and predict
         :return: Predicted class
         """
+        print("\n-----------------Performing KNN-----------------")
         distance_list = []
         for index, row in train_data.iterrows():  # iterate through all data and get distances
-            if len(distance_list) is k_val+1:  # keep list of size k
+            if len(distance_list) is k_val + 1:  # keep list of size k
                 distance_list.sort(reverse=True)  # least to greatest
                 distance = self.euclidean_distance(query_point, row)  # check first spot
                 if distance_list[0] > distance:
                     distance_list[0] = distance  # swap value to closer neighbor
             else:
                 distance_list.append(self.euclidean_distance(query_point, row))  # all features of x to a euclidean.
-        distance_list.sort(reverse=False)  # sort high to low
-        distance_list = distance_list[1:k_val+1]  # get k closest neighbors
-        print(distance_list)
-        # TODO return self.predict_by_distance(distance_list.sort(reverse=True))  # Predict by closest neighbors
-        pass
+        distance_list.sort(reverse=True) # Sort least to greatest.
+        distance_list = distance_list[1:k_val + 1]  # get k closest neighbors
+        print(str(k_val), "Nearest Neighbors to Query Point: ", query_point, ':', distance_list)
+
+        return self.predict_by_distance(distance_list)
 
     def euclidean_distance(self, query_point, comparison_point):
         """
@@ -38,6 +39,7 @@ class KNN:
         :param comparison_point: example in training data.
         :return: float distance
         """
+        print("\n-----------------Getting Euclidean Distances-----------------")
         temp_add = 0  # (x2-x1)^2 + (y2 - y1)^2 ; addition part
         for feature_col in range(len(query_point)):
             if type(query_point[feature_col]) is float or type(query_point[feature_col]) is int:
@@ -52,8 +54,27 @@ class KNN:
         :param distance_list:
         :return: Predicted class
         """
-        # TODO: Determine class
-        pass
+        print("\n-----------------Deciding Predicted Nearest Neighbor-----------------")
+        loop_iterator_location = len(distance_list)  # Variable changes if nearest neighbor conflict.
+        while True:
+            nearest_neighbor = distance_list[0]  # Sets the current pick to the first value in the list
+            predict_dictionary = {}  # Temp dictionary to keep track of counts
+            for class_obj in distance_list[
+                             :loop_iterator_location]:  # Loops through the input list to create a dictionary with values being count of classes
+                if class_obj in predict_dictionary.keys():  # Increases count if key exists
+                    predict_dictionary[class_obj] += 1
+                    if predict_dictionary[nearest_neighbor] < predict_dictionary[class_obj]:
+                        nearest_neighbor = class_obj  # Sets the nearest neighbor to the class that occurs most.
+                else:
+                    predict_dictionary[class_obj] = 1  # Create key and set count to 1
+            check_duplicates = list(predict_dictionary.values())  # Create a list to use the count function
+            if check_duplicates.count(predict_dictionary[
+                                          nearest_neighbor]) == 1:  # Sets conflict to False if the count of the top class occurrences is the only class sharing that count
+                break
+            else:
+                loop_iterator_location -= 1  # By reducing the loop iterator, we remove the furthest neighbor from our counts.
+        print("Predicted Nearest Neighbor: ", nearest_neighbor)
+        return nearest_neighbor
 
     def edit_data(self):
         """
