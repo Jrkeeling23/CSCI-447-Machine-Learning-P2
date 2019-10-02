@@ -72,3 +72,7 @@ class Data:
         :return:
         """
         pass
+
+    def get_label_col(self,data_name):
+        col_loc = {'abalone': 8, 'car' : 5, 'segmentation' : 0, 'machine' : 0, 'forest_fires' : 12, 'wine' : 0}
+        return col_loc[data_name]
