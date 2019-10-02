@@ -33,6 +33,7 @@ class Data:
         # Classification
         self.data_dict["abalone"] = pd.read_csv(r'data/abalone.data', header=None)
         self.data_dict["car"] = pd.read_csv(r'data/car.data', header=None)
+        # TODO Load segmentation data
         # self.data_dict["segmentation"] = pd.read_csv(r'data/segmentation.data', header=None)
         # Regression
         self.data_dict["machine"] = pd.read_csv(r'data/machine.data', header=None)

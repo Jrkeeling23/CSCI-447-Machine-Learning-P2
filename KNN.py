@@ -29,7 +29,7 @@ class KNN:
         distance_list = distance_list[1:k_val+1]  # get k closest neighbors
         print(distance_list)
         # TODO return self.predict_by_distance(distance_list.sort(reverse=True))  # Predict by closest neighbors
-        pass
+        return self.predict_by_distance(distance_list)
 
     def euclidean_distance(self, query_point, comparison_point):
         """
@@ -53,7 +53,17 @@ class KNN:
         :return: Predicted class
         """
         # TODO: Determine class
-        pass
+        predict_dictionary = {} # Temp dictionary to keep track of counts
+        for class_obj in distance_list: # Loops through the input list to create a dictionary with values being count of classes
+            if class_obj in predict_dictionary.keys(): # Increases count if key exists
+                predict_dictionary[class_obj] += 1
+            else: # Create key and set count to 1
+                predict_dictionary[class_obj] = 1
+        nearest_neighbor = distance_list[0] # Sets the current pick to the first value in the list
+        for class_string in predict_dictionary.keys(): # Loop through the keys and find the most occurring class
+            if predict_dictionary[nearest_neighbor] < predict_dictionary[class_string]:
+                nearest_neighbor = class_string # Sets the nearest neighbor to the class that occurs most.
+        return nearest_neighbor
 
     def edit_data(self):
         """
