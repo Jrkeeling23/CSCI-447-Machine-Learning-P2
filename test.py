@@ -12,7 +12,7 @@ class Test(unittest.TestCase):
 
     def test_predict_by_distance_with_conflict(self):
         knn = KNN()
-        class_list = ['wrong_pick','right_pick', 'wrong_pick', 'wrong', 'right_pick', 'wrong_again']
+        class_list = ['wrong_pick', 'wrong_pick', 'right_pick', 'wrong', 'right_pick','right_pick', 'wrong_pick', 'wrong_again']
         self.assertEqual(knn.predict_by_distance(class_list), 'right_pick')
 
 

@@ -52,18 +52,23 @@ class KNN:
         :param distance_list:
         :return: Predicted class
         """
-        # TODO: Determine class
-        nearest_neighbor = distance_list[0] # Sets the current pick to the first value in the list
-        predict_dictionary = {} # Temp dictionary to keep track of counts
-        for class_obj in distance_list: # Loops through the input list to create a dictionary with values being count of classes
-            if class_obj in predict_dictionary.keys(): # Increases count if key exists
-                predict_dictionary[class_obj] += 1
-                if predict_dictionary[nearest_neighbor] < predict_dictionary[class_obj]:
-                    nearest_neighbor = class_obj  # Sets the nearest neighbor to the class that occurs most.
-            else: # Create key and set count to 1
-                predict_dictionary[class_obj] = 1
-
-        # TODO Deal with two neighbors who have the same value count.
+        conflict = True # variable to loop until nearest neighbor conflict rectified.
+        loop_iterator_location = len(distance_list) # Variable changes if nearest neighbor conflict.
+        while conflict:
+            nearest_neighbor = distance_list[0] # Sets the current pick to the first value in the list
+            predict_dictionary = {} # Temp dictionary to keep track of counts
+            for class_obj in distance_list[:loop_iterator_location]: # Loops through the input list to create a dictionary with values being count of classes
+                if class_obj in predict_dictionary.keys(): # Increases count if key exists
+                    predict_dictionary[class_obj] += 1
+                    if predict_dictionary[nearest_neighbor] < predict_dictionary[class_obj]:
+                        nearest_neighbor = class_obj  # Sets the nearest neighbor to the class that occurs most.
+                else:
+                    predict_dictionary[class_obj] = 1 # Create key and set count to 1
+            check_duplicates = list(predict_dictionary.values()) # Create a list to use the count function
+            if check_duplicates.count(predict_dictionary[nearest_neighbor]) == 1: # Sets conflict to False if the count of the top class occurrences is the only class sharing that count
+                conflict = False
+            else:
+                loop_iterator_location -= 1 # By reducing the loop iterator, we remove the furthest neighbor from our counts.
 
         return nearest_neighbor
 
