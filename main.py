@@ -31,6 +31,7 @@ def main():
 def test():
     knn = KNN()
     data = Data()  # loads the data and checks if complete
+    data.move_labels_last_col()
     data.split_data()
     k_neighbors = 5
     class_labels = [8,6 ]
