@@ -78,6 +78,7 @@ class KNN:
         :param distance_list: k-number of closest distances
         :return: Predicted class
         """
+        # TODO: finish predict using the labels. Predict the labels
         print("\n-----------------Deciding Predicted Nearest Neighbor-----------------")
         loop_iterator_location = len(distance_list)  # Variable changes if nearest neighbor conflict.
         while True:
