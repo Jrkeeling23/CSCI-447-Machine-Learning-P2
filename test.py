@@ -29,6 +29,7 @@ class Test(unittest.TestCase):
         query_point = [0, 0]
         comparison_point = [2, 2]
         knn = KNN()
+        label = 'true'
 
 
 

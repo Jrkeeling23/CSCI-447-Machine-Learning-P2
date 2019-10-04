@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import csv
 
+
 class Data:
     """
     Anything relating to data such as imputations should be done here.
@@ -18,7 +19,6 @@ class Data:
 
         self.test_dict = {}
         self.train_dict = {}
-        self.move_labels_last_col()
         self.split_data()  # split data into testing and training sets
 
         if self.pre_process_data() is False:
@@ -64,7 +64,6 @@ class Data:
                 self.train_dict[data_set_name] = training_data_temp
                 self.test_dict[data_set_name] = test_data_temp
 
-
     def k_fold(self, k_val):
         """
         Use k-fold to split data
@@ -74,17 +73,6 @@ class Data:
         """
         pass
 
-    def get_label_col(self,data_name):
-        col_loc = {'abalone': 8, 'car' : 5, 'segmentation' : 0, 'machine' : 0, 'forest_fires' : 12, 'wine' : 0}
+    def get_label_col(self, data_name):
+        col_loc = {'abalone': 8, 'car': 5, 'segmentation': 0, 'machine': 0, 'forest_fires': 12, 'wine': 0}
         return col_loc[data_name]
-
-    def move_labels_last_col(self):
-        for k, v in self.data_dict.items():
-            col = self.get_label_col(k)
-            if col is not 0:
-                pass
-            else:
-                print(v)
-                column_swap = [col, v.keys()[-1]]
-                v = v.reindex(columns=column_swap)
-                print(v)

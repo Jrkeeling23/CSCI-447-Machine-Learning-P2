@@ -18,18 +18,29 @@ class KNN:
         """
         print("\n-----------------Performing KNN-----------------")
         distance_list = []
-        label_list = []
+        index_list = []
         for index, row in train_data.iterrows():  # iterate through all data and get distances
             if len(distance_list) is k_val + 1:  # keep list of size k
-                distance_list.sort(reverse=True)  # least to greatest
+                # distance_list.sort(reverse=True)  # least to greatest
                 distance = self.euclidean_distance(query_point, row)  # check first spot
-                if distance_list[0] > distance:
+                for i in range(k_val):
+                    
                     distance_list[0] = distance  # swap value to closer neighbor
+                    index_list.append()
             else:
-                distance_list.append(self.euclidean_distance(query_point, row))  # all features of x to a euclidean.
-        distance_list.sort(reverse=True) # Sort least to greatest.
-        distance_list = distance_list[1:k_val + 1]  # get k closest neighbors
+                distance_list[index] = (self.euclidean_distance(query_point, row))  # all features of x to a euclidean.
+        # distance_list.sort(reverse=True) # Sort least to greatest.
+        # distance_list = distance_list[1:k_val + 1]  # get k closest neighbors
+        # for key, value in sorted(distance_list.items(), key=lambda item: item[1]):
+        #     # print("%s: %s" % (key, value))
+
+        key_min = min(distance_list.keys(), key=(lambda k: distance_list[k]))
+        print(key_min)
+        # for val in key_min.items():
+
+
         print(str(k_val), "Nearest Neighbors to Query Point: ", query_point, ':', distance_list)
+
 
         return self.predict_by_distance(distance_list)
 
