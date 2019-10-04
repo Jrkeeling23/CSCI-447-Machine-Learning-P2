@@ -8,39 +8,47 @@ class KNN:
     Anything to do with k-nearest neighbor should be in here.
     """
 
-    def perform_knn(self, query_point, train_data, k_val):
+    def __init__(self):
+        self.current_data_set = None
+        self.data = None
+
+    def perform_knn(self, query_point, train_data, k_val, name, in_data):
         """
         Function performs KNN to classify predicted class.
+        :param in_data:
+        :param name:
         :param k_val: number of neighbors
         :param query_point: all data to compare an example from test_data too.
         :param train_data:  all data to "query" and predict
         :return: Predicted class
         """
+        self.current_data_set = name
+        self.data = in_data
         print("\n-----------------Performing KNN-----------------")
+        distance_dict = {}
         distance_list = []
-        index_list = []
+        label_list = []
         for index, row in train_data.iterrows():  # iterate through all data and get distances
-            if len(distance_list) is k_val + 1:  # keep list of size k
-                # distance_list.sort(reverse=True)  # least to greatest
-                distance = self.euclidean_distance(query_point, row)  # check first spot
-                for i in range(k_val):
-                    
-                    distance_list[0] = distance  # swap value to closer neighbor
-                    index_list.append()
+            distance = (self.euclidean_distance(query_point, row))  # all features of x to a euclidean.
+            distance_dict[index] = distance
+
+        count = 0
+        for key, value in sorted(distance_dict.items(), key=lambda item: item[1]):
+            print("%s: %s" % (key, value), " ", self.current_data_set)
+            if count > k_val:
+                break
+            elif count is 0:
+                count +=1
+                continue
             else:
-                distance_list[index] = (self.euclidean_distance(query_point, row))  # all features of x to a euclidean.
-        # distance_list.sort(reverse=True) # Sort least to greatest.
-        # distance_list = distance_list[1:k_val + 1]  # get k closest neighbors
-        # for key, value in sorted(distance_list.items(), key=lambda item: item[1]):
-        #     # print("%s: %s" % (key, value))
-
-        key_min = min(distance_list.keys(), key=(lambda k: distance_list[k]))
-        print(key_min)
-        # for val in key_min.items():
-
+                distance_list.append(value)
+                print(train_data[self.data.get_label_col(self.current_data_set)])
+                label_list.append(train_data.loc[key,self.data.get_label_col(self.current_data_set)])
+            count += 1
+        print(distance_list)
+        print(label_list)
 
         print(str(k_val), "Nearest Neighbors to Query Point: ", query_point, ':', distance_list)
-
 
         return self.predict_by_distance(distance_list)
 
@@ -51,9 +59,11 @@ class KNN:
         :param comparison_point: example in training data.
         :return: float distance
         """
-        print("\n-----------------Getting Euclidean Distances-----------------")
+        # print("\n-----------------Getting Euclidean Distances-----------------")
         temp_add = 0  # (x2-x1)^2 + (y2 - y1)^2 ; addition part
         for feature_col in range(len(query_point)):
+            if self.data.get_label_col(self.current_data_set) is feature_col:
+                continue
             if type(query_point[feature_col]) is float or type(query_point[feature_col]) is int:
                 temp_sub = (query_point[feature_col] - comparison_point[feature_col]) ** 2  # x2 -x1 and square
                 temp_add += temp_sub  # continuously add until square root
