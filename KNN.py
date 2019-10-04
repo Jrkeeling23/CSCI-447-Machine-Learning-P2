@@ -15,8 +15,8 @@ class KNN:
     def perform_knn(self, query_point, train_data, k_val, name, in_data):
         """
         Function performs KNN to classify predicted class.
-        :param in_data:
-        :param name:
+        :param in_data: the data instance from main to call process data functions
+        :param name:  name of the data_set
         :param k_val: number of neighbors
         :param query_point: all data to compare an example from test_data too.
         :param train_data:  all data to "query" and predict
@@ -25,32 +25,33 @@ class KNN:
         self.current_data_set = name
         self.data = in_data
         print("\n-----------------Performing KNN-----------------")
-        distance_dict = {}
-        distance_list = []
-        label_list = []
+        distance_dict = {}  # place all indexes, which are unique, and distances in dictionary
+        distance_list = []  # holds the k-number of distances
+        label_list = []  # holds the k-number of labels associated with disances
         for index, row in train_data.iterrows():  # iterate through all data and get distances
             distance = (self.euclidean_distance(query_point, row))  # all features of x to a euclidean.
             distance_dict[index] = distance
 
-        count = 0
+        count = 0  # stops for loop
         for key, value in sorted(distance_dict.items(), key=lambda item: item[1]):
-            print("%s: %s" % (key, value), " ", self.current_data_set)
+            # key is the index and value is the distance. Ordered least to greatest by sort().
+            # if statement to grab the k number of distances and labels
             if count > k_val:
                 break
             elif count is 0:
-                count +=1
+                count += 1  # first value is always 0.
                 continue
             else:
-                distance_list.append(value)
-                print(train_data[self.data.get_label_col(self.current_data_set)])
-                label_list.append(train_data.loc[key,self.data.get_label_col(self.current_data_set)])
-            count += 1
+                distance_list.append(value)  # add distance
+                label_list.append(train_data.loc[key,self.data.get_label_col(self.current_data_set)])  # add label
+                count += 1
+        # TODO: get rid of prints, only needed to show you all the structure.
         print(distance_list)
         print(label_list)
 
         print(str(k_val), "Nearest Neighbors to Query Point: ", query_point, ':', distance_list)
 
-        return self.predict_by_distance(distance_list)
+        return self.predict_by_distance(distance_list, label_list)  # return the predicted values
 
     def euclidean_distance(self, query_point, comparison_point):
         """
@@ -70,10 +71,11 @@ class KNN:
 
         return temp_add ** (1 / 2)  # square root
 
-    def predict_by_distance(self, distance_list):
+    def predict_by_distance(self, distance_list, label_list):
         """
         Determines the prediction of class by closest neighbors.
-        :param distance_list:
+        :param label_list: k-number of labels associated with distance list
+        :param distance_list: k-number of closest distances
         :return: Predicted class
         """
         print("\n-----------------Deciding Predicted Nearest Neighbor-----------------")
