@@ -46,10 +46,10 @@ class KNN:
                 label_list.append(train_data.loc[key,self.data.get_label_col(self.current_data_set)])  # add label
                 count += 1
         # TODO: get rid of prints, only needed to show you all the structure.
-        print(distance_list)
-        print(label_list)
+        print("Distance List: ",distance_list)
+        print('Label list', label_list)
 
-        print(str(k_val), "Nearest Neighbors to Query Point: ", query_point, ':', distance_list)
+        print(str(k_val), "Nearest Neighbors (Class) to Query Point: ", label_list)
 
         return self.predict_by_distance(distance_list, label_list)  # return the predicted values
 
@@ -78,14 +78,13 @@ class KNN:
         :param distance_list: k-number of closest distances
         :return: Predicted class
         """
-        # TODO: finish predict using the labels. Predict the labels
         print("\n-----------------Deciding Predicted Nearest Neighbor-----------------")
         loop_iterator_location = len(distance_list)  # Variable changes if nearest neighbor conflict.
         while True:
-            nearest_neighbor = distance_list[0]  # Sets the current pick to the first value in the list
+            nearest_neighbor = label_list[0]  # Sets the current pick to the first value in the list
             predict_dictionary = {}  # Temp dictionary to keep track of counts
-            for class_obj in distance_list[
-                             :loop_iterator_location]:  # Loops through the input list to create a dictionary with values being count of classes
+            for class_obj in label_list[
+                             :loop_iterator_location]:  # Loops through the input list of labels to create a dictionary with values being count of classes
                 if class_obj in predict_dictionary.keys():  # Increases count if key exists
                     predict_dictionary[class_obj] += 1
                     if predict_dictionary[nearest_neighbor] < predict_dictionary[class_obj]:
@@ -94,7 +93,7 @@ class KNN:
                     predict_dictionary[class_obj] = 1  # Create key and set count to 1
             check_duplicates = list(predict_dictionary.values())  # Create a list to use the count function
             if check_duplicates.count(predict_dictionary[
-                                          nearest_neighbor]) == 1:  # Sets conflict to False if the count of the top class occurrences is the only class sharing that count
+                                          nearest_neighbor]) == 1:  # Breaks out of loop if the count of the top class occurrences is the only class sharing that count
                 break
             else:
                 loop_iterator_location -= 1  # By reducing the loop iterator, we remove the furthest neighbor from our counts.
