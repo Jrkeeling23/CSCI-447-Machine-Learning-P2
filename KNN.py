@@ -8,29 +8,50 @@ class KNN:
     Anything to do with k-nearest neighbor should be in here.
     """
 
-    def perform_knn(self, query_point, train_data, k_val):
+    def __init__(self):
+        self.current_data_set = None
+        self.data = None
+
+    def perform_knn(self, query_point, train_data, k_val, name, in_data):
         """
         Function performs KNN to classify predicted class.
+        :param in_data: the data instance from main to call process data functions
+        :param name:  name of the data_set
         :param k_val: number of neighbors
         :param query_point: all data to compare an example from test_data too.
         :param train_data:  all data to "query" and predict
         :return: Predicted class
         """
+        self.current_data_set = name
+        self.data = in_data
         print("\n-----------------Performing KNN-----------------")
-        distance_list = []
+        distance_dict = {}  # place all indexes, which are unique, and distances in dictionary
+        distance_list = []  # holds the k-number of distances
+        label_list = []  # holds the k-number of labels associated with disances
         for index, row in train_data.iterrows():  # iterate through all data and get distances
-            if len(distance_list) is k_val + 1:  # keep list of size k
-                distance_list.sort(reverse=True)  # least to greatest
-                distance = self.euclidean_distance(query_point, row)  # check first spot
-                if distance_list[0] > distance:
-                    distance_list[0] = distance  # swap value to closer neighbor
-            else:
-                distance_list.append(self.euclidean_distance(query_point, row))  # all features of x to a euclidean.
-        distance_list.sort(reverse=True) # Sort least to greatest.
-        distance_list = distance_list[1:k_val + 1]  # get k closest neighbors
-        print(str(k_val), "Nearest Neighbors to Query Point: ", query_point, ':', distance_list)
+            distance = (self.euclidean_distance(query_point, row))  # all features of x to a euclidean.
+            distance_dict[index] = distance
 
-        return self.predict_by_distance(distance_list)
+        count = 0  # stops for loop
+        for key, value in sorted(distance_dict.items(), key=lambda item: item[1]):
+            # key is the index and value is the distance. Ordered least to greatest by sort().
+            # if statement to grab the k number of distances and labels
+            if count > k_val:
+                break
+            elif count is 0:
+                count += 1  # first value is always 0.
+                continue
+            else:
+                distance_list.append(value)  # add distance
+                label_list.append(train_data.loc[key,self.data.get_label_col(self.current_data_set)])  # add label
+                count += 1
+        # TODO: get rid of prints, only needed to show you all the structure.
+        print("Distance List: ",distance_list)
+        print('Label list', label_list)
+
+        print(str(k_val), "Nearest Neighbors (Class) to Query Point: ", label_list)
+
+        return self.predict_by_distance(label_list)  # return the predicted values
 
     def euclidean_distance(self, query_point, comparison_point):
         """
@@ -39,28 +60,31 @@ class KNN:
         :param comparison_point: example in training data.
         :return: float distance
         """
-        print("\n-----------------Getting Euclidean Distances-----------------")
+        # print("\n-----------------Getting Euclidean Distances-----------------")
         temp_add = 0  # (x2-x1)^2 + (y2 - y1)^2 ; addition part
         for feature_col in range(len(query_point)):
+            if self.data.get_label_col(self.current_data_set) is feature_col:
+                continue
             if type(query_point[feature_col]) is float or type(query_point[feature_col]) is int:
                 temp_sub = (query_point[feature_col] - comparison_point[feature_col]) ** 2  # x2 -x1 and square
                 temp_add += temp_sub  # continuously add until square root
 
         return temp_add ** (1 / 2)  # square root
 
-    def predict_by_distance(self, distance_list):
+    def predict_by_distance(self, label_list):
         """
         Determines the prediction of class by closest neighbors.
-        :param distance_list:
+        :param label_list: k-number of labels associated with distance list
+        :param distance_list: k-number of closest distances
         :return: Predicted class
         """
         print("\n-----------------Deciding Predicted Nearest Neighbor-----------------")
-        loop_iterator_location = len(distance_list)  # Variable changes if nearest neighbor conflict.
+        loop_iterator_location = len(label_list)  # Variable changes if nearest neighbor conflict.
         while True:
-            nearest_neighbor = distance_list[0]  # Sets the current pick to the first value in the list
+            nearest_neighbor = label_list[0]  # Sets the current pick to the first value in the list
             predict_dictionary = {}  # Temp dictionary to keep track of counts
-            for class_obj in distance_list[
-                             :loop_iterator_location]:  # Loops through the input list to create a dictionary with values being count of classes
+            for class_obj in label_list[
+                             :loop_iterator_location]:  # Loops through the input list of labels to create a dictionary with values being count of classes
                 if class_obj in predict_dictionary.keys():  # Increases count if key exists
                     predict_dictionary[class_obj] += 1
                     if predict_dictionary[nearest_neighbor] < predict_dictionary[class_obj]:
@@ -69,7 +93,7 @@ class KNN:
                     predict_dictionary[class_obj] = 1  # Create key and set count to 1
             check_duplicates = list(predict_dictionary.values())  # Create a list to use the count function
             if check_duplicates.count(predict_dictionary[
-                                          nearest_neighbor]) == 1:  # Sets conflict to False if the count of the top class occurrences is the only class sharing that count
+                                          nearest_neighbor]) == 1:  # Breaks out of loop if the count of the top class occurrences is the only class sharing that count
                 break
             else:
                 loop_iterator_location -= 1  # By reducing the loop iterator, we remove the furthest neighbor from our counts.
