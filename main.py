@@ -28,17 +28,6 @@ def main():
                 predicted_class[name].append(knn.perform_knn(query_point, train_data_set, 5, name, data))
 
 
-def test():
-    knn = KNN()
-    data = Data()  # loads the data and checks if complete
-    data.split_data()
-    k_neighbors = 5
-    for names, data_set in data.train_dict.items():
-        print(data.train_dict['segmentation'])
-        # knn.perform_knn(k_neighbors)
-testing = False
+
 if __name__ == "__main__":
-    if testing:
-        test()
-    else:
-        main()
+    main()
