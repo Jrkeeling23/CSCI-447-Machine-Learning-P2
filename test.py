@@ -12,9 +12,8 @@ class Test(unittest.TestCase):
 
     def test_predict_by_distance_with_conflict(self):
         knn = KNN()
-        distance_list = [.01, ]
-        class_list = [[17, 9, 17, 13, 9]]
-        self.assertEqual(knn.predict_by_distance(class_list), 'right_pick')
+        class_list = [17, 9, 17, 13, 9]
+        self.assertEqual(knn.predict_by_distance(class_list), 17)
 
     def test_eucldean_distance(self):
         '''
