@@ -51,7 +51,7 @@ class KNN:
 
         print(str(k_val), "Nearest Neighbors (Class) to Query Point: ", label_list)
 
-        return self.predict_by_distance(distance_list, label_list)  # return the predicted values
+        return self.predict_by_distance(label_list)  # return the predicted values
 
     def euclidean_distance(self, query_point, comparison_point):
         """
@@ -71,7 +71,7 @@ class KNN:
 
         return temp_add ** (1 / 2)  # square root
 
-    def predict_by_distance(self, distance_list, label_list):
+    def predict_by_distance(self, label_list):
         """
         Determines the prediction of class by closest neighbors.
         :param label_list: k-number of labels associated with distance list
@@ -79,7 +79,7 @@ class KNN:
         :return: Predicted class
         """
         print("\n-----------------Deciding Predicted Nearest Neighbor-----------------")
-        loop_iterator_location = len(distance_list)  # Variable changes if nearest neighbor conflict.
+        loop_iterator_location = len(label_list)  # Variable changes if nearest neighbor conflict.
         while True:
             nearest_neighbor = label_list[0]  # Sets the current pick to the first value in the list
             predict_dictionary = {}  # Temp dictionary to keep track of counts
