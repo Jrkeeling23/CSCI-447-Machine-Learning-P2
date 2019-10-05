@@ -121,7 +121,7 @@ class KNN:
                     # compare the classes of the two predicted values
                     # this assumes we get examples back that we need to select class from KNN
                     #  TODO:  change this as needed by KNN algo
-                    if condensed_value.iloc != data_set_value.iloc:
+                    if condensed_value != data_set_value:
                         # appending new value onto the data_set
                         condensed_data.append(row)
            # checking if the size of the condense dataset has changed, if so keep going, if not end loop
