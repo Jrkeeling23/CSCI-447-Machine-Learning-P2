@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import csv
 
 
 class Data:
@@ -12,6 +13,7 @@ class Data:
         Keep the data and functions handling data private (denoted with __ )!
         Initializes data dictionary, which holds the data frames alongside there names.
         """
+        # label = ['Age', ,
         self.data_dict = {}
         self.load_data()  # load raw data frames
 
@@ -30,15 +32,15 @@ class Data:
         Loads data into a dictionary
         :return: None
         """
-        # Classification
+        # Classification/home/justin/Desktop/ml_p2
         self.data_dict["abalone"] = pd.read_csv(r'data/abalone.data', header=None)
-        self.data_dict["car"] = pd.read_csv(r'data/car.data', header=None)
+        self.data_dict["car"] = pd.read_csv(r'data/car.data', header=None) # TODO figure out distance function for car data
         # TODO Load segmentation data
-        # self.data_dict["segmentation"] = pd.read_csv(r'data/segmentation.data', header=None)
+        self.data_dict["segmentation"] = pd.read_csv(r'data/segmentation.data', header=1, skiprows=[0])
         # Regression
         self.data_dict["machine"] = pd.read_csv(r'data/machine.data', header=None)
-        self.data_dict["forest_fires"] = pd.read_csv(r'data/forestfires.data', header=None)
-        self.data_dict["wine"] = pd.read_csv(r'data/wine.data', header=None)
+        self.data_dict["forest_fires"] = pd.read_csv(r'data/forestfires.data', header=None) # TODO figure out distance function for forest fires data
+        self.data_dict["wine"] = pd.read_csv(r'data/wine.data', header=None) # TODO Figure out distance function for wine data
 
     def pre_process_data(self):
         """
@@ -62,7 +64,6 @@ class Data:
                 self.train_dict[data_set_name] = training_data_temp
                 self.test_dict[data_set_name] = test_data_temp
 
-
     def k_fold(self, k_val):
         """
         Use k-fold to split data
@@ -71,3 +72,7 @@ class Data:
         :return:
         """
         pass
+
+    def get_label_col(self, data_name):
+        col_loc = {'abalone': 8, 'car': 5, 'segmentation': 0, 'machine': 0, 'forest_fires': 12, 'wine': 0}
+        return col_loc[data_name]

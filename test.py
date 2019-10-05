@@ -12,8 +12,25 @@ class Test(unittest.TestCase):
 
     def test_predict_by_distance_with_conflict(self):
         knn = KNN()
-        class_list = ['wrong_pick', 'wrong_pick', 'right_pick', 'wrong', 'right_pick','right_pick', 'wrong_pick', 'wrong_again']
-        self.assertEqual(knn.predict_by_distance(class_list), 'right_pick')
+        class_list = [17, 9, 17, 13, 9]
+        self.assertEqual(knn.predict_by_distance(class_list), 17)
+
+    def test_eucldean_distance(self):
+        '''
+        test to see of creating correct distances
+        :return:
+        '''
+        query_point = [0, 0]
+        comparison_point = [2, 2]
+        knn = KNN()
+        self.assertEqual(knn.euclidean_distance(query_point, comparison_point), (8**0.5))
+
+    def test_perform_knn(self):
+        query_point = [0, 0]
+        comparison_point = [2, 2]
+        knn = KNN()
+        label = 'true'
+
 
 
 
