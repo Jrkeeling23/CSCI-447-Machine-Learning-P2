@@ -156,42 +156,40 @@ class KNN:
                         lowest_distance = e_dist  # store lowest distance
                         minimum_index = c_index  # store minimum index to check classification
                         # classify our 2 vals with KNN and compare class values
-                    # selecting value found an minimum index for condensed, and using the row we are iterating on
-                    condensed_value = self.perform_knn(condensed_data.iloc[minimum_index][:], data_set, k_val, self.current_data_set, self.data)
-                    data_set_value = self.perform_knn(row, data_set, k_val, self.current_data_set, self.data)
-                    # compare the classes of the two predicted values
-                    # this assumes we get examples back that we need to select class from KNN
-                    #  TODO:  change this as needed by KNN algo
-                    if condensed_value != data_set_value:
-                        # create new data set with new values
-                        print("\n-----------------Adding val to condensed-----------------")
-                        # add new values to list and append that 2 list for condensed data
-                        vals = []
-                        for val in row:
-                            vals.append(val)
-                        list_for_adding.append(vals)
+                # selecting value found an minimum index for condensed, and using the row we are iterating on
+                condensed_value = self.perform_knn(condensed_data.iloc[minimum_index][:], data_set, k_val, self.current_data_set, self.data)
+                data_set_value = self.perform_knn(row, data_set, k_val, self.current_data_set, self.data)
+                # compare the classes of the two predicted values
+                # this assumes we get examples back that we need to select class from KNN
+                #  TODO:  change this as needed by KNN algo
+                if condensed_value != data_set_value:
+                    # create new data set with new values
+                    print("\n-----------------Adding val to condensed-----------------")
+                    # add new values to list and append that 2 list for condensed data
+                    vals = []
+                    for val in row:
+                        vals.append(val)
+                    list_for_adding.append(vals)
 
-                        condensed_data = pd.DataFrame(list_for_adding)
+                    condensed_data = pd.DataFrame(list_for_adding)
                     # checking if the size of the condense dataset has changed, if so keep going, if not end loop
                     print(len(condensed_data.index))
                     print(condensed_size)
+                    print(has_changed)
 
-                    if condensed_size is len(condensed_data.index) or len(condensed_data.index) > 100:
-                        has_changed = False  # if the length Has not changed, end loop
-                        break
-                    elif condensed_size > 10000:  # just in case break condition TODO: possibly remove
-                        print("in elif")
-                        has_changed = False
-                        break
-                    else:
-                        has_changed = True  # size has changed, keep going
-                        condensed_size = len(condensed_data.index) # update our length
+            if condensed_size is len(condensed_data.index) or len(condensed_data.index) > 100:
+                has_changed = False  # if the length Has not changed, end loop
+                break
+            elif condensed_size > 10000:  # just in case break condition TODO: possibly remove
+                print("in elif")
+                has_changed = False
+                break
+            else:
+                has_changed = True  # size has changed, keep going
+                condensed_size = len(condensed_data.index) # update our length
 
-                # extra breaking statement
-                print(has_changed)
-                if has_changed is False:
-                    print("in final break")
-                    break
+            # extra breaking statement
+
 
             # another brake
             print(has_changed)
