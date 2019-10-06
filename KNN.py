@@ -164,7 +164,7 @@ class KNN:
                 #  TODO:  change this as needed by KNN algo
                 if condensed_value != data_set_value:
                     # create new data set with new values
-                    print("\n-----------------Adding val to condensed-----------------")
+                    print("\n-----------------Adding datapoint to condensed dataset-----------------")
                     # add new values to list and append that 2 list for condensed data
                     vals = []
                     for val in row:
@@ -172,11 +172,11 @@ class KNN:
                     list_for_adding.append(vals)
 
                     condensed_data = pd.DataFrame(list_for_adding)
-                    # checking if the size of the condense dataset has changed, if so keep going, if not end loop
-                    print(len(condensed_data.index))
-                    print(condensed_size)
-                    print(has_changed)
 
+                    # print(len(condensed_data.index))
+                    # print(condensed_size)
+                print(has_changed)
+            # checking if the size of the condense dataset has changed, if so keep going, if not end loop
             if condensed_size is len(condensed_data.index) or len(condensed_data.index) > 100:
                 has_changed = False  # if the length Has not changed, end loop
                 break
@@ -188,14 +188,12 @@ class KNN:
                 has_changed = True  # size has changed, keep going
                 condensed_size = len(condensed_data.index) # update our length
 
-            # extra breaking statement
 
-
-            # another brake
-            print(has_changed)
-            if has_changed is False:
-                print("in final break 2")
-                break
+            # another break
+           # print(has_changed)
+           # if has_changed is False:
+            #    print("in final break 2")
+            #    break
 
         print("\n-----------------Finished performing Condensed Dataset Reduction-----------------")
         return condensed_data
