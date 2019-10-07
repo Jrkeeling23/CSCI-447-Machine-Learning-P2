@@ -1,6 +1,7 @@
 import unittest
 from KNN import KNN
-
+import pandas as pd
+from process_data import Data
 
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
 class Test(unittest.TestCase):
@@ -30,6 +31,19 @@ class Test(unittest.TestCase):
         comparison_point = [2, 2]
         knn = KNN()
         label = 'true'
+
+    def test_condense_data(self):
+        # compare that the size of  output pandas data frame is less than input (that CNN reduced the data)
+        # importing part of abalone data to test this as we need the 2D structure
+        knn = KNN()
+        data = Data()
+        data_temp = pd.read_csv(r'data/abalone.data', header=None)
+        data_set = data_temp.loc[:400][:]  # get first 100 rows of data_set
+        k_val = 5
+        name = 'abalone'  # used in KNN, needed here
+        cond_data = knn.condense_data(data_set, k_val, name, data)
+
+        self.assertGreater(len(data_set.index),len(cond_data.index))
 
 
 
