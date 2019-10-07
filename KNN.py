@@ -45,10 +45,10 @@ class KNN:
                 continue
             else:
                 distance_list.append(value)  # add distance
-                label_list.append(train_data.loc[key,self.data.get_label_col(self.current_data_set)])  # add label
+                label_list.append(train_data.loc[key, self.data.get_label_col(self.current_data_set)])  # add label
                 count += 1
         # TODO: get rid of prints, only needed to show you all the structure.
-        print("Distance List: ",distance_list)
+        print("Distance List: ", distance_list)
         print('Label list', label_list)
 
         print(str(k_val), "Nearest Neighbors (Class) to Query Point: ", label_list)
@@ -127,15 +127,15 @@ class KNN:
         self.current_data_set = name
         # new dataset to hold condensed values
         # condensed_data = pd.DataFrame()
-        firstElem = [] # use later to store values to remake dataset
-        list_for_adding =[]
+        firstElem = []  # use later to store values to remake dataset
+        list_for_adding = []
         list_for_adding.append(firstElem)
-        for  val in data_set.iloc[0]:
+        for val in data_set.iloc[0]:
             firstElem.append(val)
         col_list = list(data_set.columns)
 
         # finally got adding 1 row down
-        condensed_data = pd.DataFrame([firstElem], columns= col_list)
+        condensed_data = pd.DataFrame([firstElem], columns=col_list)
         # condensed_data = condensed_data.append(firstElem)
 
         has_changed = True  # bool to break if condensedData no longer changes
@@ -144,22 +144,23 @@ class KNN:
 
         while has_changed is True:  # outside loop for CNN
 
-            lowest_distance = 99999999 # holding distance here, settting to 999 just to make sure we get a smaller num
+            lowest_distance = 99999999  # holding distance here, settting to 999 just to make sure we get a smaller num
             minimum_index = -1  # index for that minimum element
             # go through every point in the data set, get point with lowest distance with class != to our example
             # TODO:  May want to make this random, not sure if needed
             for index, row in data_set.iterrows():
-         # go through the condensed dataset and find point with the lowest distance to point from actual data (euclidian)
+                # go through the condensed dataset and find point with the lowest distance to point from actual data (euclidian)
                 for c_index, c_row in condensed_data.iterrows():  # should start with at least one
-                  #  print(c_row)
+                    #  print(c_row)
 
-                    e_dist = self.euclidean_distance(row,c_row)  # take distance
+                    e_dist = self.euclidean_distance(row, c_row)  # take distance
                     if e_dist < lowest_distance:  # compare current dist to last seen lowest
                         lowest_distance = e_dist  # store lowest distance
                         minimum_index = c_index  # store minimum index to check classification
                         # classify our 2 vals with KNN and compare class values
                 # selecting value found an minimum index for condensed, and using the row we are iterating on
-                condensed_value = self.perform_knn(condensed_data.iloc[minimum_index][:], data_set, k_val, self.current_data_set, self.data)
+                condensed_value = self.perform_knn(condensed_data.iloc[minimum_index][:], data_set, k_val,
+                                                   self.current_data_set, self.data)
                 data_set_value = self.perform_knn(row, data_set, k_val, self.current_data_set, self.data)
                 # compare the classes of the two predicted values
                 # this assumes we get examples back that we need to select class from KNN
@@ -188,41 +189,46 @@ class KNN:
                 break
             else:
                 has_changed = True  # size has changed, keep going
-                condensed_size = len(condensed_data.index) # update our length
-
+                condensed_size = len(condensed_data.index)  # update our length
 
             # another break
-           # print(has_changed)
-           # if has_changed is False:
-            #    print("in final break 2")
-            #    break
+        # print(has_changed)
+        # if has_changed is False:
+        #    print("in final break 2")
+        #    break
 
         print("\n-----------------Finished performing Condensed Dataset Reduction-----------------")
         return condensed_data
 
-    def centroids(self, data_set, k_val):
-        centroid_points = self.k_random_rows(data_set, k_val)
+    def centroids(self, data_set, k_val): # Method for K-Means
+        centroid_points = self.k_random_rows(data_set, k_val) # Get random rows for centroid points
         print(k_val, "Centroid Points for K-Means Clustering: ")
         print(centroid_points)
-
+        cluster_centroid = self.create_initial_clusters(centroid_points) # Create the initial centroid point pd.DataFrames.
 
 
 
         return True
 
-
-
-    def k_random_rows(self, data_set, k_val): # Method to grab k_random rows for centroid method
+    def k_random_rows(self, data_set, k_val):  # Method to grab k_random rows for centroid method
         print("\n-----------------Finding Centroids-----------------")
         random_row_int = []
         centroid_points = []
-        for k in range(k_val): # Loops for k_val
-            while True: # While loop in case of duplicate random numbers
-                random_int = random.randint(0,len(data_set)-1) # Selects a random row
+        for k in range(k_val):  # Loops for k_val
+            while True:  # While loop in case of duplicate random numbers
+                random_int = random.randint(0, len(data_set) - 1)  # Selects a random row
                 if random_int not in random_row_int:
-                    random_row_int.append((random_int)) # Append the row for duplicate checking above
+                    random_row_int.append((random_int))  # Append the row for duplicate checking above
                     # Source to get pandas DataFrame row with iloc: https://www.shanelynn.ie/select-pandas-dataframe-rows-and-columns-using-iloc-loc-and-ix/
-                    centroid_points.append(data_set.iloc[random_int]) # Append the row information to a centroid point list
+                    centroid_points.append(
+                        data_set.iloc[random_int])  # Append the row information to a centroid point list
                     break
 
-        return pd.DataFrame(centroid_points) # Returns a dataframe of centroid points
+        return pd.DataFrame(centroid_points)  # Returns a dataframe of centroid points
+
+    def create_initial_clusters(self, centroid_points): # Creates a list of k_val DataFrames with the centroid points
+        print("\n-----------------Creating Initial Clusters-----------------")
+        clusters = []
+        for cluster in centroid_points.iterrows(): # Loops through the rows of the dataframe passed in.
+            clusters.append(pd.DataFrame(cluster)) # Appends to a list of pd. DataFrames
+        return clusters

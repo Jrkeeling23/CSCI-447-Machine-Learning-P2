@@ -3,6 +3,7 @@ from KNN import KNN
 import pandas as pd
 from process_data import Data
 
+
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
 class Test(unittest.TestCase):
 
@@ -55,8 +56,9 @@ class Test(unittest.TestCase):
 
         self.assertEqual(knn.centroids(data_set, 7), True)
         print("End Centroid Test")
-# Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
 
+
+# Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
 
 
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
