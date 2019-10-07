@@ -175,7 +175,7 @@ class KNN:
 
                     # print(len(condensed_data.index))
                     # print(condensed_size)
-                print(has_changed)
+
             # checking if the size of the condense dataset has changed, if so keep going, if not end loop
             if condensed_size is len(condensed_data.index) or len(condensed_data.index) > 100:
                 has_changed = False  # if the length Has not changed, end loop
