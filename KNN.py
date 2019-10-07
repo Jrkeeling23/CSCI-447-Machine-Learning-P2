@@ -201,21 +201,28 @@ class KNN:
         return condensed_data
 
     def centroids(self, data_set, k_val):
-        print("\n-----------------Finding Centroids-----------------")
-        random_row_int = []
-        centroid_points = []
-        for k in range(k_val):
-            while True:
-                random_int = random.randint(0,len(data_set)-1)
-                if random_int not in random_row_int:
-                    random_row_int.append((random_int))
-                    # Source to get pandas DataFrame row with iloc: https://www.shanelynn.ie/select-pandas-dataframe-rows-and-columns-using-iloc-loc-and-ix/
-                    centroid_points.append(data_set.iloc[random_int])
-                    break
-
-        centroid_points = pd.DataFrame(centroid_points)
+        centroid_points = self.k_random_rows(data_set, k_val)
         print(k_val, "Centroid Points for K-Means Clustering: ")
         print(centroid_points)
 
 
+
+
         return True
+
+
+
+    def k_random_rows(self, data_set, k_val): # Method to grab k_random rows for centroid method
+        print("\n-----------------Finding Centroids-----------------")
+        random_row_int = []
+        centroid_points = []
+        for k in range(k_val): # Loops for k_val
+            while True: # While loop in case of duplicate random numbers
+                random_int = random.randint(0,len(data_set)-1) # Selects a random row
+                if random_int not in random_row_int:
+                    random_row_int.append((random_int)) # Append the row for duplicate checking above
+                    # Source to get pandas DataFrame row with iloc: https://www.shanelynn.ie/select-pandas-dataframe-rows-and-columns-using-iloc-loc-and-ix/
+                    centroid_points.append(data_set.iloc[random_int]) # Append the row information to a centroid point list
+                    break
+
+        return pd.DataFrame(centroid_points) # Returns a dataframe of centroid points
