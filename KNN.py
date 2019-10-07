@@ -1,3 +1,5 @@
+import random
+
 import pandas as pd
 import numpy as np
 from process_data import Data
@@ -197,3 +199,23 @@ class KNN:
 
         print("\n-----------------Finished performing Condensed Dataset Reduction-----------------")
         return condensed_data
+
+    def centroids(self, data_set, k_val):
+        print("\n-----------------Finding Centroids-----------------")
+        random_row_int = []
+        centroid_points = []
+        for k in range(k_val):
+            while True:
+                random_int = random.randint(0,len(data_set)-1)
+                if random_int not in random_row_int:
+                    random_row_int.append((random_int))
+                    # Source to get pandas DataFrame row with iloc: https://www.shanelynn.ie/select-pandas-dataframe-rows-and-columns-using-iloc-loc-and-ix/
+                    centroid_points.append(data_set.iloc[random_int])
+                    break
+
+        centroid_points = pd.DataFrame(centroid_points)
+        print(k_val, "Centroid Points for K-Means Clustering: ")
+        print(centroid_points)
+
+
+        return True
