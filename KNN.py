@@ -200,13 +200,19 @@ class KNN:
         print("\n-----------------Finished performing Condensed Dataset Reduction-----------------")
         return condensed_data
 
-    def centroids(self, data_set, k_val): # Method for K-Means
-        centroid_points = self.k_random_rows(data_set, k_val) # Get random rows for centroid points
-        print(k_val, "Centroid Points for K-Means Clustering: ")
-        print(centroid_points)
-        cluster_centroid = self.create_initial_clusters(centroid_points) # Create the initial centroid point pd.DataFrames.
-
-
+    def centroids(self, data_set, k_val):  # Method for K-Means
+        print("\n-----------------Starting K-Means Clustering Centroids-----------------")
+        centroid_points = self.create_initial_clusters(self.k_random_rows(data_set,
+                                                                          k_val))  # Get random rows for centroid points then create the initial centroid point pd.DataFrames
+        previous_cluster = None
+        cluster_changed = True
+        while (cluster_changed):
+            cluster = self.assign_cluster(centroid_points, data_set)
+            for loc in len(cluster):
+                if previous_cluster[loc] != cluster[loc]:
+                    break
+                elif loc == len(cluster):
+                    cluster_changed = False
 
         return True
 
@@ -226,9 +232,9 @@ class KNN:
 
         return pd.DataFrame(centroid_points)  # Returns a dataframe of centroid points
 
-    def create_initial_clusters(self, centroid_points): # Creates a list of k_val DataFrames with the centroid points
+    def create_initial_clusters(self, centroid_points):  # Creates a list of k_val DataFrames with the centroid points
         print("\n-----------------Creating Initial Clusters-----------------")
         clusters = []
-        for cluster in centroid_points.iterrows(): # Loops through the rows of the dataframe passed in.
-            clusters.append(pd.DataFrame(cluster)) # Appends to a list of pd. DataFrames
+        for cluster in centroid_points.iterrows():  # Loops through the rows of the dataframe passed in.
+            clusters.append(pd.DataFrame(cluster))  # Appends to a list of pd. DataFrames
         return clusters
