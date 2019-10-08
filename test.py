@@ -2,6 +2,8 @@ import unittest
 from KNN import KNN
 import pandas as pd
 from process_data import Data
+from medoids import Medoids
+from pandas.util.testing import assert_frame_equal
 
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
 class Test(unittest.TestCase):
@@ -45,7 +47,22 @@ class Test(unittest.TestCase):
 
         self.assertGreater(len(data_set.index),len(cond_data.index))
 
+    def test_select_random_k(self):
+        data_temp = pd.read_csv(r'data/abalone.data', header=None)
+        md = Medoids(data_temp)
+        rand = md.select_random(5)
+        check = rand.isin(md.df).all()
+        testing = True
+        for bool in check:
+            if bool is False:
+                testing = True
+        self.assertTrue(testing)
 
+    def test_select_random_k_size(self):
+        data_temp = pd.read_csv(r'data/abalone.data', header=None)
+        md = Medoids(data_temp)
+        rand = md.select_random(5)
+        self.assertEqual(rand.shape[0], 5)
 
 
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
