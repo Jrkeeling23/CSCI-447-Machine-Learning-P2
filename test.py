@@ -45,8 +45,14 @@ class Test(unittest.TestCase):
 
         self.assertGreater(len(data_set.index),len(cond_data.index))
 
-
-
+    def test_zero_one_loss(self):
+        knn = KNN()
+        data = Data()
+        data_temp = pd.read_csv(r'data/abalone.data', header=None)
+        data_set = data_temp.loc[:1000][:]  # get first 100 rows of data_set
+        k_val = 5
+        name = 'abalone'  # used in KNN, needed here
+        self.assertIsNotNone(knn.zero_one_loss(data_set, k_val, name, data))
 
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
 if __name__ == '__main__':
