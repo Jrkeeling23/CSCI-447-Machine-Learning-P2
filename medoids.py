@@ -1,9 +1,15 @@
 import numpy as np
 import pandas as pd
 import random
+from process_data import Data
 
 
-def euclidean_distance(query_point, comparison_point, df):
+def get_label_col(data_name):
+    col_loc = {'abalone': 8, 'car': 5, 'segmentation': 0, 'machine': 0, 'forest_fires': 12, 'wine': 0}
+    return col_loc[data_name]
+
+
+def euclidean_distance(query_point, comparison_point, data_name):
     """
     Performs the Euclidean distance function
     :param query_point: a data point
@@ -13,13 +19,14 @@ def euclidean_distance(query_point, comparison_point, df):
     """
     temp_add = 0  # (x2-x1)^2 + (y2 - y1)^2 ; addition part
     for feature_col in range(len(query_point)):
-        if df.get_label_col(df.data_name) is feature_col:
+        if get_label_col(data_name) is feature_col:
             continue
         if type(query_point[feature_col]) is float or type(query_point[feature_col]) is int:
-            temp_sub = (query_point[feature_col] - comparison_point.row[feature_col]) ** 2  # x2 -x1 and square
+            temp_sub = (query_point[feature_col] - comparison_point[feature_col]) ** 2  # x2 -x1 and square
             temp_add += temp_sub  # continuously add until square root
 
     return temp_add ** (1 / 2)  # square root ... return the specific distance
+
 
 class KMedoids:
 
@@ -38,6 +45,8 @@ class KMedoids:
         self.data_name = data_name  # assigns the current data set being used for label column purposes
         self.select_random(k)  # select random data points to represent the medoids
         self.assign_to_medoids()  # assign the remaining data points to its closest medoid
+        for med in self.medoids_list:
+            print(med.encompasses)
 
     def select_random(self, k):
         """
@@ -55,9 +64,9 @@ class KMedoids:
         for index, row in self.df.iterrows():
             if index in self.medoids_list:
                 continue  # exclude to data points that are medoids
-            else:
+            elif index not in self.medoids_list and index is not None:
                 chosen_medoid = self.check_all_medoid_distances(row)  # check the row to  medoids for closest distance
-                chosen_medoid.encompasses.assign_to_medoid(index)  # assign the index of the data point to the medoid
+                chosen_medoid.assign_to_medoid(index)  # assign the index of the data point to the medoid
 
     def check_all_medoid_distances(self, query_point):
         """
@@ -67,7 +76,7 @@ class KMedoids:
         """
         distances = {}  # dict to hold the indexes and the distances
         for med in self.medoids_list:
-            distances[med] = euclidean_distance(query_point, med.row, self.df)
+            distances[med] = euclidean_distance(query_point, med.medoid_point, self.data_name)
         return self.sort_dict_by_value(distances)
 
     def sort_dict_by_value(self, sort_this):
@@ -78,16 +87,20 @@ class KMedoids:
         """
         k_size = len(self.medoids_list)
         first_iteration = True
-        closest = None
+        closest_medoid = None
+        saved_closest = None
+
         for k, v in sort_this.items():
             if first_iteration:
-                closest = k  # grab specific medoid
+                saved_closest = v  # grab specific medoid
                 first_iteration = False  # assign first distance
+                closest_medoid = k
                 continue
             else:
-                if closest > v:
-                    closest = k  # change closest var to closer
-        return closest  # closest medoid
+                if saved_closest > v:
+                    saved_closest = v  # change closest var to closer
+                    closest_medoid = k
+        return closest_medoid  # closest medoid
 
     def create_medoid_instances(self, medoids):
         """
@@ -98,7 +111,6 @@ class KMedoids:
         self.medoids_list = []
         for index, row in medoids.iterrows():
             self.medoids_list.append(Medoids(row, index))
-        print(self.medoids_list)
 
     # TODO: function that will be called after data points have been assigned to a medoid.... it will have a while
     #  loop that will continue iterating until medoid points do not change.
@@ -114,6 +126,7 @@ class Medoids:
         self.medoid_point = point
         self.encompasses = []
         self.index = index
+        self.distance_list = {}
 
     def assign_to_medoid(self, index):
         """
@@ -130,4 +143,3 @@ class Medoids:
     def check_for_better_fit(self):
         # TODO: Function that will check the medoids encompassed data points for a better fit.
         pass
-

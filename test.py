@@ -67,10 +67,8 @@ class Test(unittest.TestCase):
     def test_assigning_medoids_instance_creation(self):
         data_temp = pd.read_csv(r'data/abalone.data', header=None)
         md = KMedoids(data_temp)
-        md.data_name = 'abalone'
-        md.medoids = md.select_random(5)
-        md.create_medoid_instances(md.medoids)
-
+        # md.data_name = 'abalone'
+        md.perform_medoids(5,'abalone')
         self.assertEqual(len(md.medoids_list), 5)
 
 
