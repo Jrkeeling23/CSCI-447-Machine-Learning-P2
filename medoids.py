@@ -131,4 +131,3 @@ class Medoids:
         # TODO: Function that will check the medoids encompassed data points for a better fit.
         pass
 
-    # TODO: add functions to change the medoids and pick a more appropriate point
