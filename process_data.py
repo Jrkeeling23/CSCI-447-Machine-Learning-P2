@@ -15,11 +15,11 @@ class Data:
         """
         # label = ['Age', ,
         self.data_dict = {}
-        self.load_data()  # load raw data frames
+        # self.load_data()  # load raw data frames
 
         self.test_dict = {}
         self.train_dict = {}
-        self.split_data()  # split data into testing and training sets
+        # self.split_data()  # split data into testing and training sets
 
         if self.pre_process_data() is False:
             # TODO: complete the data
@@ -73,6 +73,7 @@ class Data:
         """
         pass
 
-    def get_label_col(self, data_name):
+    @staticmethod
+    def get_label_col(data_name):
         col_loc = {'abalone': 8, 'car': 5, 'segmentation': 0, 'machine': 0, 'forest_fires': 12, 'wine': 0}
         return col_loc[data_name]
