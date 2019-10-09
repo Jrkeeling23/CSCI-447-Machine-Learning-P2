@@ -2,7 +2,7 @@ import unittest
 from KNN import KNN
 import pandas as pd
 from process_data import Data
-from medoids import Medoids
+from medoids import KMedoids
 from pandas.util.testing import assert_frame_equal
 
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
@@ -49,7 +49,7 @@ class Test(unittest.TestCase):
 
     def test_select_random_k(self):
         data_temp = pd.read_csv(r'data/abalone.data', header=None)
-        md = Medoids(data_temp)
+        md = KMedoids(data_temp)
         rand = md.select_random(5)
         check = rand.isin(md.df).all()
         testing = True
@@ -60,9 +60,18 @@ class Test(unittest.TestCase):
 
     def test_select_random_k_size(self):
         data_temp = pd.read_csv(r'data/abalone.data', header=None)
-        md = Medoids(data_temp)
+        md = KMedoids(data_temp)
         rand = md.select_random(5)
         self.assertEqual(rand.shape[0], 5)
+
+    def test_assigning_medoids_instance_creation(self):
+        data_temp = pd.read_csv(r'data/abalone.data', header=None)
+        md = KMedoids(data_temp)
+        md.data_name = 'abalone'
+        md.medoids = md.select_random(5)
+        md.create_medoid_instances(md.medoids)
+
+        self.assertEqual(len(md.medoids_list), 5)
 
 
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
