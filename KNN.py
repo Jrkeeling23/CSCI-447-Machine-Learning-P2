@@ -202,18 +202,27 @@ class KNN:
 
     def centroids(self, data_set, k_val):  # Method for K-Means
         print("\n-----------------Starting K-Means Clustering Centroids-----------------")
-        centroid_points = self.create_initial_clusters(self.k_random_rows(data_set,
-                                                                          k_val))  # Get random rows for centroid points then create the initial centroid point pd.DataFrames
+        # centroid_points = self.create_initial_clusters(self.k_random_rows(data_set,
+        #                                                                   k_val))  # Get random rows for centroid points then create the initial centroid point pd.DataFrames
+        centroid_points = self.k_random_rows(data_set, k_val)
+        print(centroid_points)
         previous_cluster = None
         cluster_changed = True
-        while (cluster_changed):
-            cluster = self.assign_cluster(centroid_points, data_set)
-            for loc in len(cluster):
-                if previous_cluster[loc] != cluster[loc]:
-                    break
-                elif loc == len(cluster):
-                    cluster_changed = False
+        cluster_points = []
+        for row in centroid_points.iterrows():
+            cluster_points.append(row)
 
+        print("ClusterS: ")
+        print (cluster_points)
+        while (cluster_changed):
+            centroid_loc = 0
+            for _, row in centroid_points.iterrows():
+                for data_row in data_set.iterrows():
+                    cluster = self.euclidean_distance(row, data_row)
+
+
+
+            centroid_loc = 0
         return True
 
     def k_random_rows(self, data_set, k_val):  # Method to grab k_random rows for centroid method
@@ -237,4 +246,5 @@ class KNN:
         clusters = []
         for cluster in centroid_points.iterrows():  # Loops through the rows of the dataframe passed in.
             clusters.append(pd.DataFrame(cluster))  # Appends to a list of pd. DataFrames
+
         return clusters

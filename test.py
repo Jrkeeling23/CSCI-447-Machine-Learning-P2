@@ -49,16 +49,14 @@ class Test(unittest.TestCase):
     def test_centroids(self):
         print("Testing Centroid")
         knn = KNN()
-        data = Data()  # loads the data and checks if complete
-        data.split_data()  # split into both test and train
-        predicted_class = {}  # holds data_set_name and a list of predicted classes
-        data_set = data.train_dict.get('abalone')
-
-        self.assertEqual(knn.centroids(data_set, 7), True)
+        data = Data()
+        data.split_data()
+        knn.data = data
+        knn.current_data_set = 'abalone'  # used in KNN, needed here
+        self.assertEqual(knn.centroids(data.train_dict[knn.current_data_set], 7), True)
         print("End Centroid Test")
 
 
-# Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
 
 
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html

@@ -34,13 +34,13 @@ class Data:
         """
         # Classification/home/justin/Desktop/ml_p2
         self.data_dict["abalone"] = pd.read_csv(r'data/abalone.data', header=None)
-        self.data_dict["car"] = pd.read_csv(r'data/car.data', header=None) # TODO figure out distance function for car data
-        # TODO Load segmentation data
-        self.data_dict["segmentation"] = pd.read_csv(r'data/segmentation.data', header=1, skiprows=[0])
-        # Regression
-        self.data_dict["machine"] = pd.read_csv(r'data/machine.data', header=None)
-        self.data_dict["forest_fires"] = pd.read_csv(r'data/forestfires.data', header=None) # TODO figure out distance function for forest fires data
-        self.data_dict["wine"] = pd.read_csv(r'data/wine.data', header=None) # TODO Figure out distance function for wine data
+        # self.data_dict["car"] = pd.read_csv(r'data/car.data', header=None) # TODO figure out distance function for car data
+        # # TODO Load segmentation data
+        # self.data_dict["segmentation"] = pd.read_csv(r'data/segmentation.data', header=1, skiprows=[0])
+        # # Regression
+        # self.data_dict["machine"] = pd.read_csv(r'data/machine.data', header=None)
+        # self.data_dict["forest_fires"] = pd.read_csv(r'data/forestfires.data', header=None) # TODO figure out distance function for forest fires data
+        # self.data_dict["wine"] = pd.read_csv(r'data/wine.data', header=None) # TODO Figure out distance function for wine data
 
     def pre_process_data(self):
         """
