@@ -100,6 +100,9 @@ class KMedoids:
             self.medoids_list.append(Medoids(row, index))
         print(self.medoids_list)
 
+    # TODO: function that will be called after data points have been assigned to a medoid.... it will have a while
+    #  loop that will continue iterating until medoid points do not change.
+
 
 class Medoids:
     def __init__(self, point, index):
@@ -120,4 +123,12 @@ class Medoids:
         """
         self.encompasses.append(index)
 
-    # TODO: add functions to change the medoids and pick a more appropraite point
+    def change_medoid_point(self):
+        # TODO: Once the data points have been assigned to a medoid, a better data_point may need to be used instead!
+        pass
+
+    def check_for_better_fit(self):
+        # TODO: Function that will check the medoids encompassed data points for a better fit.
+        pass
+
+    # TODO: add functions to change the medoids and pick a more appropriate point
