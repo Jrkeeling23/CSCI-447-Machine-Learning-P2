@@ -71,6 +71,12 @@ class Test(unittest.TestCase):
         md.perform_medoids(5,'abalone')
         self.assertEqual(len(md.medoids_list), 5)
 
+    def test_medoids(self):
+        data_temp = pd.read_csv(r'data/abalone.data', header=None)
+        md = KMedoids(data_temp)
+        # md.data_name = 'abalone'
+        md.perform_medoids(5, 'abalone')
+        self.assertEqual(len(md.medoids_list), 5)
 
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
 if __name__ == '__main__':
