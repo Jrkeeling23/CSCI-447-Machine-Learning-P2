@@ -101,16 +101,47 @@ class KNN:
         print("Predicted Nearest Neighbor: ", nearest_neighbor)
         return nearest_neighbor
 
-    def edit_data(self):
+    def edit_data(self, data_set, k_value, name, validation):
         """
         Edit values for edit_knn by classifying x_initial; if wrong, remove x_initial. (option1)
         OR... if correct remove (option 2)
-        :return: Edited values back to KNN
+        :param data_set: the training data that will be edited
+        :param k_value: the number of neighbors being checked against
+        :param name: name of the data_set
+        :param validation: the test data, so that there is a measurement of performance to know when to stop
+        :return: Edited data_set back to KNN
         """
         # TODO: edit data according to pseudo code from class on 9/23
-        pass
+        self.current_data_set = name
+        # prev_set = data_set
+        data_set_perform = 0  # for getting an initial measure on performance
+        for index, row in data_set.iterrows:  # loops through the validation set and if it matches, then it adds one to the score
+            knn = self.perform_knn(row, data_set, k_value, self.current_data_set, validation)
+            if knn == row[self.data.get_label_col(self.current_data_set)]:
+                data_set_perform+=1
+        prev_set_perform = data_set_perform  # for allowing the loop to occur
+        while data_set_perform > prev_set_perform:  # doesn't break until the performance drops below the previous set
+            prev_set_perform = data_set_perform  # sets the previous set and previous set performance
+            prev_set = data_set
+            list_to_remove = []  # initializes the list of items that will be removed
+            for index, row in data_set.iterrows():  # does knn on itself
+                knn_value = self.perform_knn(row, data_set, k_value, self.current_data_set, data_set)
+                actual_value = row[self.data.get_label_col(self.current_data_set)]
+                if knn_value!=actual_value:  # comparing the knn done on itself to it's actual value.  If it doesn't match, it will be removed
+                    list_to_remove.append(index)
+            data_set.drop(list_to_remove)  # removes the data points that don't match
+            data_set_perform = 0  # resets the performance measure
+            for index, row in data_set.iterrows:  # gets the performance measure
+                knn = self.perform_knn(row, data_set, k_value, self.current_data_set, validation)
+                if knn == row[self.data.get_label_col(self.current_data_set)]:
+                    data_set_perform += 1
+        return prev_set  # returns the set with the best performance
 
-    def condense_data(self):
+
+
+
+
+    def condense_data(self, data_set, k_val, name, in_data):
         """
         Condense the data set by instantiating a Z = None. Add x_initial to Z if initial class(x_initial) != class(x)
         where x is an example in Z.
