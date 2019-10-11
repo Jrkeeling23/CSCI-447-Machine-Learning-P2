@@ -52,7 +52,7 @@ class Test(unittest.TestCase):
     def test_medoids(self):
         data = Data()
         data_temp = pd.read_csv(r'data/abalone.data', header=None)
-        training_data_temp, test_data_temp = np.split(data_temp.sample(n=400), [int(.8 * len(data_temp))])
+        training_data_temp, test_data_temp = np.split(data_temp.sample(n=300), [int(.8 * 300)])
         data.test_dict = test_data_temp
         data.train_dict = training_data_temp
 
