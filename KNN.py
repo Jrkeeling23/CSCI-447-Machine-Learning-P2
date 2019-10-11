@@ -204,47 +204,47 @@ class KNN:
         print("\n-----------------Starting K-Means Clustering Centroids-----------------")
         # centroid_points = self.create_initial_clusters(self.k_random_rows(data_set,
         #                                                                   k_val))  # Get random rows for centroid points then create the initial centroid point pd.DataFrames
-        centroid_points = self.k_random_rows(data_set, k_val)
-        print(centroid_points)
-        previous_cluster = None
-        cluster_changed = True
-        cluster_points = []
-        for row in centroid_points.iterrows():
-            cluster_points.append(row)
+        centroid_points = self.k_random_point(data_set, k_val)
+        # print(centroid_points)
+        # previous_cluster = None
+        # cluster_changed = True
+        # cluster_points = []
+        # for row in centroid_points.iterrows():
+        #     cluster_points.append(row)
+        #
+        # print("ClusterS: ")
+        # print (cluster_points)
+        # while (cluster_changed):
+        #     centroid_loc = 0
+        #     for _, row in centroid_points.iterrows():
+        #         for data_row in data_set.iterrows():
+        #             cluster = self.euclidean_distance(row, data_row)
+        #
+        #
 
-        print("ClusterS: ")
-        print (cluster_points)
-        while (cluster_changed):
-            centroid_loc = 0
-            for _, row in centroid_points.iterrows():
-                for data_row in data_set.iterrows():
-                    cluster = self.euclidean_distance(row, data_row)
-
-
-
-            centroid_loc = 0
+        # centroid_loc = 0
         return True
 
-    def k_random_rows(self, data_set, k_val):  # Method to grab k_random rows for centroid method
+    def k_random_point(self, data_set, k_val):  # Method to grab k_random rows for centroid method
         print("\n-----------------Finding Centroids-----------------")
-        random_row_int = []
-        centroid_points = []
-        for k in range(k_val):  # Loops for k_val
-            while True:  # While loop in case of duplicate random numbers
-                random_int = random.randint(0, len(data_set) - 1)  # Selects a random row
-                if random_int not in random_row_int:
-                    random_row_int.append((random_int))  # Append the row for duplicate checking above
-                    # Source to get pandas DataFrame row with iloc: https://www.shanelynn.ie/select-pandas-dataframe-rows-and-columns-using-iloc-loc-and-ix/
-                    centroid_points.append(
-                        data_set.iloc[random_int])  # Append the row information to a centroid point list
-                    break
+        current_point = []  # List for current random point in loop
+        centroid_points = []  # List of centroid points type DataFrame
+        print(data_set)
+        for k in range(k_val):  # Grabs k Centroids
+            length = len(data_set[1]) - 1  # Gets the length of the dataframe
+            # Following row iteration with iteritems() sourced from https://stackoverflow.com/questions/28218698/how-to-iterate-over-columns-of-pandas-dataframe-to-run-regression/32558621 User: mdh and mmBs
+            for col in data_set.iteritems():  # Loops through columns
+                while True:  # While loop if random value is not found in column
+                    random_int = random.randint(0, length)  # Selects a random row
+                    try:
+                        current_point.append(col[1][random_int])  # Appends the column point to the current point list
+                        break
+                    except:
+                        pass
 
-        return pd.DataFrame(centroid_points)  # Returns a dataframe of centroid points
+            centroid_points.append(pd.DataFrame(current_point))  # Appends the point to a list to be returned
+            current_point = []  # Resets current point
 
-    def create_initial_clusters(self, centroid_points):  # Creates a list of k_val DataFrames with the centroid points
-        print("\n-----------------Creating Initial Clusters-----------------")
-        clusters = []
-        for cluster in centroid_points.iterrows():  # Loops through the rows of the dataframe passed in.
-            clusters.append(pd.DataFrame(cluster))  # Appends to a list of pd. DataFrames
+        return centroid_points  # Returns a dataframe of centroid points
 
-        return clusters
+
