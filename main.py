@@ -6,6 +6,7 @@ Justin Keeling, Alex Harry, Andrew Smith, John Lambrect
 from process_data import Data
 from KNN import KNN
 from loss_functions import LF
+import pandas as pd
 
 # def run_knn():
 #     """
@@ -28,25 +29,32 @@ from loss_functions import LF
 #                 # give query example and its corresponding train_data_set, along with # of desired neighbors to consider
 #                 predicted_class[name].append(knn.perform_knn(query_point, train_data_set, 5, name, data))
 
+knn = KNN()
+data = Data()
+lf = LF()
+data.load_data()
+data.split_data()
+
 
 def run_zero_loss():
     """
     Calls function in other files until program is finished.
     :return: None
     """
-    knn = KNN()
-    data = Data()  # loads the data and checks if complete
-
     while True:
-        lf = LF()
-        data.load_data()
-        data.split_data()  # split into both test and train
+
         predicted_class = {}  # holds data_set_name and a list of predicted classes
 
         for name, train_data_set in data.train_dict.items():  # iterate through data and get key(Data name) and data_set
-                lf.zero_one_loss(train_data_set, 5, name, data)
+            lf.zero_one_loss(train_data_set, 5, name, data)
+
+
+def run_edit_condense():
+    k_val = 5
+    cond_data = knn.condense_data(data.train_dict['segmentation'], k_val, 'segmentation', data)
 
 
 if __name__ == "__main__":
     # run_knn()
-    run_zero_loss()
+    # run_zero_loss()
+    run_edit_condense()
