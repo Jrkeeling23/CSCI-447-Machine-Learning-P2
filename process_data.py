@@ -34,7 +34,7 @@ class Data:
         """
         # Classification/home/justin/Desktop/ml_p2
         self.data_dict["abalone"] = pd.read_csv(r'data/abalone.data', header=None)
-        # self.data_dict["car"] = pd.read_csv(r'data/car.data', header=None) # TODO figure out distance function for car data
+        # # self.data_dict["car"] = pd.read_csv(r'data/car.data', header=None) # TODO figure out distance function for car data
         # # TODO Load segmentation data
         # self.data_dict["segmentation"] = pd.read_csv(r'data/segmentation.data', header=1, skiprows=[0])
         # # Regression
