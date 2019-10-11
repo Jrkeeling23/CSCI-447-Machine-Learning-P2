@@ -60,7 +60,7 @@ class KMedoids:
                 break
             elif self.temp_med_list == self.medoids_list and temp < 4:
                 temp += 1
-        self.predict(k=3)
+        return self.predict(k=3)
 
     def select_random(self, k):
         """
@@ -206,6 +206,7 @@ class KMedoids:
         for index, row in self.test.iterrows():
             predict_list.append(self.find_k_closest_neighbors(row, k))
         print(predict_list)
+        return predict_list
 
     def find_k_closest_neighbors(self, query, k):
         closest = None

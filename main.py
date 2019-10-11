@@ -66,7 +66,8 @@ def run_edited():
 
 def run_medoids(test_data, train):
     md = KMedoids(test_data, train)
-    md.perform_medoids(3, 'abalone')
+    predict = md.perform_medoids(3, 'abalone')
+    lf.mean_squared_error(predict, test_data)
 
 
 if __name__ == "__main__":
