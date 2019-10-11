@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import csv
+from KNN import KNN
 
 
 class Data:
@@ -64,14 +65,42 @@ class Data:
                 self.train_dict[data_set_name] = training_data_temp
                 self.test_dict[data_set_name] = test_data_temp
 
-    def k_fold(self, k_val):
+
+
+    def k_fold_KNN(self, split_data, k_val, name):
         """
-        Use k-fold to split data
-        TODO: 10 Fold or 5 if need be.
+             perform k fold on KNN with split dataset
+             :param split data: list of k split dataset
+             :param k_val: k we used when splitting data
+             :param name: dataset name
+             :param knn_k: number of neighbors
+             :param
+             :return:
+             """
+        i = 0
+        usedSetIndex = 0;  # keep track of how many datasets out of K we have used
+        while i < len(split_data):
+            test_set = split_data[i]
+            split_data.remove(split_data[i])  # remove test set from list of current data
+            train_set = pd.concat(split_data) # create new training set
+            KNN
+
+
+
+
+
+    def split_k_fold(self, k_val, dataset):
+        """
+        Split data into list of K different parts
         :param k_val: k value to set size of folds.
-        :return:
+        :return: list of k different data sets to be used for test / training
         """
-        pass
+        k__split_data = np.array_split(dataset, k_val) # splits dataset into k parts
+        return k__split_data
+
+
+
+
 
     def get_label_col(self, data_name):
         col_loc = {'abalone': 8, 'car': 5, 'segmentation': 0, 'machine': 0, 'forest_fires': 12, 'wine': 0}
