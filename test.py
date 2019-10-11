@@ -20,15 +20,16 @@ class Test(unittest.TestCase):
 #         class_list = ['wrong_pick', 'wrong_pick', 'right_pick', 'wrong', 'right_pick','right_pick', 'wrong_pick', 'wrong_again']
 #         self.assertEqual(knn.predict_by_distance(class_list), 'right_pick')
 #
-#     def test_eucldean_distance(self):
-#         '''
-#         test to see of creating correct distances
-#         :return:
-#         '''
-#         query_point = [0, 0]
-#         comparison_point = [2, 2]
-#         knn = KNN()
-#         self.assertEqual(knn.euclidean_distance(query_point, comparison_point), (8**0.5))
+    # def test_eucldean_distance(self):
+    #     '''
+    #     test to see of creating correct distances
+    #     :return:
+    #     '''
+    #     query_point = [0, 0]
+    #     comparison_point = [2, 2]
+    #     knn = KNN()
+    #     # print(query_point)
+    #     self.assertEqual(knn.euclidean_distance(query_point, comparison_point), (8**0.5))
 #
 #     def test_perform_knn(self):
 #         query_point = [0, 0]
@@ -42,10 +43,12 @@ class Test(unittest.TestCase):
         knn = KNN()
         data = Data()
         data_temp = pd.read_csv(r'data/abalone.data', header=None)
-        data_set = data_temp.loc[:400][:]  # get first 100 rows of data_set
+        data_set = data_temp.loc[0:100]  # get first 100 rows of data_set
+        validate = data_temp.loc[100:150]
+        # print(validate.shape)
         k_val = 5
         name = 'abalone'  # used in KNN, needed here
-        cond_data = knn.edit_data(data_set, k_val, name, data)
+        cond_data = knn.edit_data(data_set, k_val, name, validate, data)
 
         self.assertGreater(len(data_set.index), len(cond_data.index))
 

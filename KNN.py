@@ -24,7 +24,7 @@ class KNN:
         """
         self.current_data_set = name
         self.data = in_data
-        print("\n-----------------Performing KNN-----------------")
+        # print("\n-----------------Performing KNN-----------------")
         distance_dict = {}  # place all indexes, which are unique, and distances in dictionary
         distance_list = []  # holds the k-number of distances
         label_list = []  # holds the k-number of labels associated with disances
@@ -46,10 +46,10 @@ class KNN:
                 label_list.append(train_data.loc[key, self.data.get_label_col(self.current_data_set)])  # add label
                 count += 1
         # TODO: get rid of prints, only needed to show you all the structure.
-        print(distance_list)
-        print(label_list)
+        # print(distance_list)
+        # print(label_list)
 
-        print(str(k_val), "Nearest Neighbors to Query Point: ", query_point, ':', distance_list)
+        # print(str(k_val), "Nearest Neighbors to Query Point: ", query_point, ':', distance_list)
 
         return self.predict_by_distance(distance_list, label_list)  # return the predicted values
 
@@ -79,7 +79,7 @@ class KNN:
         :return: Predicted class
         """
         # TODO: finish predict using the labels. Predict the labels
-        print("\n-----------------Deciding Predicted Nearest Neighbor-----------------")
+        # print("\n-----------------Deciding Predicted Nearest Neighbor-----------------")
         loop_iterator_location = len(distance_list)  # Variable changes if nearest neighbor conflict.
         while True:
             nearest_neighbor = distance_list[0]  # Sets the current pick to the first value in the list
@@ -98,7 +98,7 @@ class KNN:
                 break
             else:
                 loop_iterator_location -= 1  # By reducing the loop iterator, we remove the furthest neighbor from our counts.
-        print("Predicted Nearest Neighbor: ", nearest_neighbor)
+        # print("Predicted Nearest Neighbor: ", nearest_neighbor)
         return nearest_neighbor
 
     def edit_data(self, data_set, k_value, name, validation, in_data):
@@ -109,6 +109,7 @@ class KNN:
         :param k_value: the number of neighbors being checked against
         :param name: name of the data_set
         :param validation: the test data, so that there is a measurement of performance to know when to stop
+        :param in_data: instance of data from main
         :return: Edited data_set back to KNN
         """
         # TODO: edit data according to pseudo code from class on 9/23
@@ -116,13 +117,21 @@ class KNN:
         self.data = in_data
         # prev_set = data_set
         data_set_perform = 0  # for getting an initial measure on performance
+        print(data_set.shape)
+        print(validation.shape)
         for index, row in validation.iterrows():  # loops through the validation set and if it matches, then it adds one to the score
             knn = self.perform_knn(row, data_set, k_value, self.current_data_set, self.data)
+            print(knn)
+            print(row[self.data.get_label_col(self.current_data_set)])
             if knn == row[self.data.get_label_col(self.current_data_set)]:
                 data_set_perform+=1
+                print(data_set_perform)
         # data_set_perform = 20
         prev_set_perform = data_set_perform  # for allowing the loop to occur
         while data_set_perform >= prev_set_perform:  # doesn't break until the performance drops below the previous set
+            print(prev_set_perform)
+            print(str(data_set_perform)+"\n\n")
+
             prev_set_perform = data_set_perform  # sets the previous set and previous set performance
             prev_set = data_set
             list_to_remove = []  # initializes the list of items that will be removed
@@ -133,7 +142,7 @@ class KNN:
                     list_to_remove.append(index)
             data_set.drop(list_to_remove)  # removes the data points that don't match
             data_set_perform = 0  # resets the performance measure
-            for index, row in validation.iterrows:  # gets the performance measure
+            for index, row in validation.iterrows():  # gets the performance measure
                 knn = self.perform_knn(row, data_set, k_value, self.current_data_set, self.data)
                 if knn == row[self.data.get_label_col(self.current_data_set)]:
                     data_set_perform += 1
@@ -155,6 +164,6 @@ class KNN:
         # TODO: edit data according to pseudo code from class on 9/23
         pass
 
-data = Data()
-knn = KNN()
-knn.edit_data(data.train_dict["abalone"], 5, "abalone", data.test_dict["abalone"], data)
+# data = Data()
+# knn = KNN()
+# knn.edit_data(data.train_dict["abalone"], 5, "abalone", data.test_dict["abalone"], data)
