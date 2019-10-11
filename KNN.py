@@ -66,7 +66,6 @@ class KNN:
         # print("\n-----------------Getting Euclidean Distances-----------------")
         temp_add = 0  # (x2-x1)^2 + (y2 - y1)^2 ; addition part
         for feature_col in range(len(query_point)):
-            que = type(query_point[feature_col])
 
             if self.data.get_label_col(self.current_data_set) is feature_col:
                 continue
@@ -208,48 +207,40 @@ class KNN:
         #                                                                   k_val))  # Get random rows for centroid points then create the initial centroid point pd.DataFrames
         print("\n-----------------Getting K Random Centroid Points-----------------")
         centroid_points = self.k_random_point(data_set, k_val)
+        current_points = []
+
+        clusters = [] # List of cluster pd.DataFrames
+        initiate_list = 0
+        for point in centroid_points: # Make a list of DataFrame clusters
+            clusters.append([])
+            clusters[initiate_list].append(list(point))
+            initiate_list += 1
+        new_clusters = []
         while True:
             previous_clusters = []
             for _, data in data_set.iterrows():
                 distance  = None
-                current_closest_point = None
+                current_closest_point = []
+                iterator = 0
                 for centroid in centroid_points:
                     euclid_distance = self.euclidean_distance(centroid, data)
-                    print("euclid: ", euclid_distance)
+                    # print("euclid: ", euclid_distance)
                     # print(centroid)
                     if distance is None or euclid_distance < distance:
                         distance = euclid_distance
-                        current_closest_point = centroid
-                        print("Changing point")
-                    else:
-                        print("Not Changing")
-                distance = None
-                print("----------------")
+                        current_closest_point = [centroid, iterator]
+                    iterator += 1
+                clusters[current_closest_point[1]].append(list(current_closest_point[0]))
+            for closest_cluster in clusters:
+                current_points.append(pd.DataFrame(closest_cluster))
+            break
 
-
-        # previous_cluster = None
-        # cluster_changed = True
-        # cluster_points = []
-        # for row in centroid_points.iterrows():
-        #     cluster_points.append(row)
-        #
-        # print("ClusterS: ")
-        # print (cluster_points)
-        # while (cluster_changed):
-        #     centroid_loc = 0
-        #     for _, row in centroid_points.iterrows():
-        #         for data_row in data_set.iterrows():
-        #             cluster = self.euclidean_distance(row, data_row)
-        #
-        #
-
-        # centroid_loc = 0
         return True
 
     def k_random_point(self, data_set, k_val):  # Method to grab k_random rows for centroid method
         print("\n-----------------Finding Centroids-----------------")
         current_point = []  # List for current random point in loop
-        centroid_points = []  # List of centroid points type DataFrame
+        centroid_points = []  # List of centroid points type Series
         for k in range(k_val):  # Grabs k Centroids
             length = len(data_set[1]) - 1  # Gets the length of the dataframe
             # Following row iteration with iteritems() sourced from https://stackoverflow.com/questions/28218698/how-to-iterate-over-columns-of-pandas-dataframe-to-run-regression/32558621 User: mdh and mmBs
@@ -265,6 +256,6 @@ class KNN:
             centroid_points.append(pd.Series(current_point))  # Appends the point to a list to be returned
             current_point = []  # Resets current point
 
-        return centroid_points  # Returns a dataframe of centroid points
+        return centroid_points  # Returns a Series of centroid points
 
 
