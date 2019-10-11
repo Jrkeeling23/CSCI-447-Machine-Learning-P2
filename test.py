@@ -6,6 +6,7 @@ from loss_functions import LF
 import numpy as np
 from medoids import KMedoids
 
+
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
 class Test(unittest.TestCase):
 
@@ -62,8 +63,8 @@ class Test(unittest.TestCase):
     def test_k_fold(self):
         data = Data()
         data_temp = pd.read_csv(r'data/abalone.data', header=None)
-        data_split = data.split_k_fold(10, data_temp) #  split into 10 dif parts
-        self.assertIs(len(data_split), 10) # check split into 2 groups
+        data_split = data.split_k_fold(5, data_temp) #  split into 10 dif parts
+        self.assertIs(len(data_split), 5) # check split into 2 groups
         self.assertIs(len(data_split[0]), 2) # check that it split into test and train
 
     def test_centroids(self):
@@ -72,25 +73,10 @@ class Test(unittest.TestCase):
         data = Data()
         data.split_data()
         knn.data = data
-        knn.current_data_set = 'abalone'  # used in KNN, needed here
-        self.assertEqual(knn.centroids(data.train_dict[knn.current_data_set], 4), True)
+        knn.current_data_set = 'wine'  # used in KNN, needed here
+        centroids = knn.centroids(data.train_dict, 4)
+        knn.predict_centroids(centroids, data.test_dict)
         print("End Centroid Test")
-
-    def test_medoids(self):
-        data = Data()
-        data_temp = pd.read_csv(r'data/abalone.data', header=None)
-        training_data_temp, test_data_temp = np.split(data_temp.sample(n=300), [int(.8 * 300)])
-        data.test_dict = test_data_temp
-        data.train_dict = training_data_temp
-
-        md = KMedoids(test_data_temp, training_data_temp)
-        # md.data_name = 'abalone'
-
-        md.perform_medoids(5, 'abalone')
-        self.assertEqual(len(md.medoids_list), 5)
-
-
-
 
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
 if __name__ == '__main__':

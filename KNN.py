@@ -66,9 +66,11 @@ class KNN:
         # print("\n-----------------Getting Euclidean Distances-----------------")
         temp_add = 0  # (x2-x1)^2 + (y2 - y1)^2 ; addition part
         for feature_col in range(len(query_point)):
+
             if self.data.get_label_col(self.current_data_set) is feature_col:
                 continue
-            if type(query_point[feature_col]) is float or type(query_point[feature_col]) is int:
+            if type(query_point[feature_col]) is float or type(query_point[feature_col]) is int or type(
+                    query_point[feature_col]) is np.float64:
                 temp_sub = (query_point[feature_col] - comparison_point[feature_col]) ** 2  # x2 -x1 and square
                 temp_add += temp_sub  # continuously add until square root
 
@@ -200,9 +202,8 @@ class KNN:
         print("\n-----------------Finished performing Condensed Dataset Reduction-----------------")
         return condensed_data
 
-
-
     def centroids(self, data_set, k_val):  # Method for K-Means
+        data_set = data_set[self.current_data_set]
         print("\n-----------------Starting K-Means Function-----------------")
         # centroid_points = self.create_initial_clusters(self.k_random_rows(data_set,
         #                                                                   k_val))  # Get random rows for centroid points then create the initial centroid point pd.DataFrames
@@ -323,3 +324,24 @@ class KNN:
                     current_point[index])  # Last value in the data set is an INT. This is a type cast.
         return current_point
 
+    def predict_centroids(self, centroids, data_set): # Method to return closest cluster to test data
+        print("\n----------------- Predicting Closes Cluster on Test Data -----------------\n")
+
+        for _, data in data_set[self.current_data_set].iterrows():  # Loops through the rows of the data set
+            distance = None  # Initializes distance
+            closest_centroid = None  # Keeps track of the current closes centroid cluster
+            closest_centroid_euclidian_distance = None # Keeps track of the closest euclidian distance.
+            cluster_val = 1
+            for centroid in centroids:  # Loops through the k centroid points
+                euclid_distance = self.euclidean_distance(centroid,
+                                                          data)  # Gets the distance between the centroid and the data point
+
+                if distance is None or euclid_distance < distance:  # Updates the distance to keep track of the closest point
+                    distance = euclid_distance
+                    # closest_centroid = centroid
+                    closest_centroid = cluster_val
+                    closest_centroid_euclidian_distance = distance
+                cluster_val += 1
+            # Print closest cluster to the test data point.
+            print("\nEuclidian Distance to Closest K-Means Cluster: ", closest_centroid_euclidian_distance)
+            print("Closest Cluster: Cluster ", closest_centroid )
