@@ -36,15 +36,10 @@ def run_zero_loss():
     """
     knn = KNN()
     data = Data()  # loads the data and checks if complete
-
-    while True:
-        lf = LF()
-        data.load_data()
-        data.split_data()  # split into both test and train
-        predicted_class = {}  # holds data_set_name and a list of predicted classes
-
-        for name, train_data_set in data.train_dict.items():  # iterate through data and get key(Data name) and data_set
-                lf.zero_one_loss(train_data_set, 5, name, data)
+    lf = LF()
+    data.load_data()
+    data.split_data()  # split into both test and train
+    lf.zero_one_loss(data.test_dict['abalone'].sample(n=400), 5, 'abalone', data)
 
 
 def run_k_means(): # Run k-means on wine data set
@@ -56,8 +51,11 @@ def run_k_means(): # Run k-means on wine data set
     centroids = knn.centroids(data.train_dict, 5) # Get the k-means clusters
     knn.predict_centroids(centroids, data.test_dict) # Predict the closest cluster
 
+def run_edit_condense():
+    pass
+
 
 if __name__ == "__main__":
     # run_knn()
-    # run_zero_loss()
-    run_k_means()
+    run_zero_loss()
+    # run_k_means()
