@@ -56,6 +56,6 @@ class LF:
             sum += currentSum # add current to total sum
 
         # divide by n
-        sum = sum/2
+        sum = sum/n
         return sum # done, return sum
 
