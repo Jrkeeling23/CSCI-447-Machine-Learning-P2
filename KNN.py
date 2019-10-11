@@ -43,7 +43,7 @@ class KNN:
                 continue
             else:
                 distance_list.append(value)  # add distance
-                label_list.append(train_data.loc[key,self.data.get_label_col(self.current_data_set)])  # add label
+                label_list.append(train_data.loc[key, self.data.get_label_col(self.current_data_set)])  # add label
                 count += 1
         # TODO: get rid of prints, only needed to show you all the structure.
         print(distance_list)
@@ -101,7 +101,7 @@ class KNN:
         print("Predicted Nearest Neighbor: ", nearest_neighbor)
         return nearest_neighbor
 
-    def edit_data(self, data_set, k_value, name, validation):
+    def edit_data(self, data_set, k_value, name, validation, in_data):
         """
         Edit values for edit_knn by classifying x_initial; if wrong, remove x_initial. (option1)
         OR... if correct remove (option 2)
@@ -113,28 +113,32 @@ class KNN:
         """
         # TODO: edit data according to pseudo code from class on 9/23
         self.current_data_set = name
+        self.data = in_data
         # prev_set = data_set
         data_set_perform = 0  # for getting an initial measure on performance
-        for index, row in data_set.iterrows:  # loops through the validation set and if it matches, then it adds one to the score
-            knn = self.perform_knn(row, data_set, k_value, self.current_data_set, validation)
+        for index, row in validation.iterrows():  # loops through the validation set and if it matches, then it adds one to the score
+            knn = self.perform_knn(row, data_set, k_value, self.current_data_set, self.data)
             if knn == row[self.data.get_label_col(self.current_data_set)]:
                 data_set_perform+=1
+        # data_set_perform = 20
         prev_set_perform = data_set_perform  # for allowing the loop to occur
-        while data_set_perform > prev_set_perform:  # doesn't break until the performance drops below the previous set
+        while data_set_perform >= prev_set_perform:  # doesn't break until the performance drops below the previous set
             prev_set_perform = data_set_perform  # sets the previous set and previous set performance
             prev_set = data_set
             list_to_remove = []  # initializes the list of items that will be removed
             for index, row in data_set.iterrows():  # does knn on itself
-                knn_value = self.perform_knn(row, data_set, k_value, self.current_data_set, data_set)
+                knn_value = self.perform_knn(row, data_set, k_value, self.current_data_set, self.data)
                 actual_value = row[self.data.get_label_col(self.current_data_set)]
                 if knn_value!=actual_value:  # comparing the knn done on itself to it's actual value.  If it doesn't match, it will be removed
                     list_to_remove.append(index)
             data_set.drop(list_to_remove)  # removes the data points that don't match
             data_set_perform = 0  # resets the performance measure
-            for index, row in data_set.iterrows:  # gets the performance measure
-                knn = self.perform_knn(row, data_set, k_value, self.current_data_set, validation)
+            for index, row in validation.iterrows:  # gets the performance measure
+                knn = self.perform_knn(row, data_set, k_value, self.current_data_set, self.data)
                 if knn == row[self.data.get_label_col(self.current_data_set)]:
                     data_set_perform += 1
+        print(data_set.shape)
+        print(prev_set.shape)
         return prev_set  # returns the set with the best performance
 
 
@@ -150,3 +154,7 @@ class KNN:
         """
         # TODO: edit data according to pseudo code from class on 9/23
         pass
+
+data = Data()
+knn = KNN()
+knn.edit_data(data.train_dict["abalone"], 5, "abalone", data.test_dict["abalone"], data)
