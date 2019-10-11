@@ -103,14 +103,41 @@ class KNN:
         print("Predicted Nearest Neighbor: ", nearest_neighbor)
         return nearest_neighbor
 
-    def edit_data(self):
+    def edit_data(self, data_set, valid_set, k_val, name, in_data):
         """
-        Edit values for edit_knn by classifying x_initial; if wrong, remove x_initial. (option1)
-        OR... if correct remove (option 2)
+        Edit values for edit_knn by classifying x_initial; if wrong, remove x_initial. (option1) we going with op1
+        :param data_set, data we are going to run on
+        :param valid_set, validation set
+        :param k_val k val for knn
+        :param name, dataset name for knn
+        :param in_data data object for knn
         :return: Edited values back to KNN
         """
         # TODO: edit data according to pseudo code from class on 9/23
-        pass
+        print("\n-----------------Performing Edited KNN Dataset Reduction-----------------")
+        self.data = in_data
+        self.current_data_set = name
+        # new dataset to hold condensed values
+        # condensed_data = pd.DataFrame()
+        firstElem = []  # use later to store values to remake dataset
+        list_for_adding = []
+        list_for_adding.append(firstElem)
+        for val in data_set.iloc[0]:
+            firstElem.append(val)
+        col_list = list(data_set.columns)
+
+        # finally got adding 1 row down
+        condensed_data = pd.DataFrame([firstElem], columns=col_list)
+        # condensed_data = condensed_data.append(firstElem)
+        has_changed = False  # bool to break if edited data is false no longer changes
+
+
+        while has_changed is False:  # loop to check if performance has degraded
+            # go through the data points (rows)
+            for index, row in data_set.iterrows():
+
+
+
 
     def condense_data(self, data_set, k_val, name, in_data):
         """
