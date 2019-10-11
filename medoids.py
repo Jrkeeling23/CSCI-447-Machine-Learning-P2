@@ -52,7 +52,7 @@ class KMedoids:
         decreasing = True
         temp = 0
         while decreasing:
-            print("REPEAT")
+            print("\n\t\tREPEAT")
             decreasing = self.find_best_fit()
             self.reset()
             if self.temp_med_list == self.medoids_list and temp > 4:
@@ -60,7 +60,6 @@ class KMedoids:
                 break
             elif self.temp_med_list == self.medoids_list and temp < 4:
                 temp += 1
-            print("mdl", self.medoids_list, " tmdl= ", self.temp_med_list)
         self.predict(k=3)
 
     def select_random(self, k):
@@ -130,6 +129,7 @@ class KMedoids:
         self.medoids_list = []
         for index, row in medoids.iterrows():
             self.medoids_list.append(Medoids(row, index))  # initialize a new medoid and assign to the medoids list
+        print("_________Initialize Medoids_________")
 
     def swap(self, medoid, temp_medoid, df_name):
         """
@@ -174,7 +174,7 @@ class KMedoids:
         return False
 
     def print_medoids(self):
-        string = 'Medoids List: '
+        string = '\nMedoids List: '
         self.temp_med_list = self.medoids_list
         for med in self.medoids_list:
             string += str(med.index) + ", "
@@ -185,7 +185,7 @@ class KMedoids:
         self.print_medoids()
         self.assign_to_medoids(self.medoids_list)  # assign the remaining data points to its closest medoid
         for med in self.medoids_list:  # iterate through medoids
-            print("Current medoid Index that is being updated ", med.index)
+            print("\nCurrent medoid Index that is being updated ", med.index)
             self.current_med = med
             for index, row in self.df.iterrows():  # iterate though every point in the data set
                 if self.check_index(index, self.medoids_list, t_index=None):  # if index is a medoid
