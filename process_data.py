@@ -21,11 +21,7 @@ class Data:
         self.train_dict = {}
         self.split_data()  # split data into testing and training sets
 
-        if self.pre_process_data() is False:
-            # TODO: complete the data
-            pass
-        else:
-            pass  # Keep this pass
+
 
     def load_data(self):
         """
