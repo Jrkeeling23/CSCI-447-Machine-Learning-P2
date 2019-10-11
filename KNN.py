@@ -244,8 +244,7 @@ class KNN:
                 print("\n----------------- K-Means has converged! -----------------")
                 break
 
-        # return centroid_points
-        return True
+        return centroid_points
 
     def k_random_point(self, data_set, k_val):  # Method to grab k_random rows for centroid method
         print("\n-----------------Finding Centroids-----------------")
