@@ -47,6 +47,17 @@ def run_zero_loss():
                 lf.zero_one_loss(train_data_set, 5, name, data)
 
 
+def run_k_means(): # Run k-means on wine data set
+    knn = KNN()
+    data = Data()
+    data.split_data() # Split the data in to train and test
+    knn.data = data
+    knn.current_data_set = 'wine'  # Set the data set to be used to wine
+    centroids = knn.centroids(data.train_dict, 5) # Get the k-means clusters
+    knn.predict_centroids(centroids, data.test_dict) # Predict the closest cluster
+
+
 if __name__ == "__main__":
     # run_knn()
-    run_zero_loss()
+    # run_zero_loss()
+    run_k_means()
