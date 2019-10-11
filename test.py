@@ -59,22 +59,12 @@ class Test(unittest.TestCase):
         name = 'abalone'  # used in KNN, needed here
         #cond_data = knn.condense_data(data_set, k_val, name, data)
         self.assertIsNotNone(lf.zero_one_loss(data_set, k_val, name, data))
-    def test_centroids(self):
-        print("Testing Centroid")
-        knn = KNN()
-        data = Data()
-        data.split_data()
-        knn.data = data
-        knn.current_data_set = 'abalone'  # used in KNN, needed here
-        centroids = knn.centroids(data.train_dict[knn.current_data_set], 4)
-        knn.predict_centroids(centroids, data.test_dict)
-        print("End Centroid Test")
 
     def test_k_fold(self):
         data = Data()
         data_temp = pd.read_csv(r'data/abalone.data', header=None)
-        data_split = data.split_k_fold(10, data_temp) #  split into 10 dif parts
-        self.assertIs(len(data_split), 10) # check split into 2 groups
+        data_split = data.split_k_fold(5, data_temp) #  split into 10 dif parts
+        self.assertIs(len(data_split), 5) # check split into 2 groups
         self.assertIs(len(data_split[0]), 2) # check that it split into test and train
 
     def test_centroids(self):
@@ -83,8 +73,9 @@ class Test(unittest.TestCase):
         data = Data()
         data.split_data()
         knn.data = data
-        knn.current_data_set = 'abalone'  # used in KNN, needed here
-        self.assertEqual(knn.centroids(data.train_dict[knn.current_data_set], 4), True)
+        knn.current_data_set = 'wine'  # used in KNN, needed here
+        centroids = knn.centroids(data.train_dict, 4)
+        knn.predict_centroids(centroids, data.test_dict)
         print("End Centroid Test")
 
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
