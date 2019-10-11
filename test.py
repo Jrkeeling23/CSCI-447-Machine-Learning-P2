@@ -57,6 +57,16 @@ class Test(unittest.TestCase):
         #cond_data = knn.condense_data(data_set, k_val, name, data)
         self.assertIsNotNone(lf.zero_one_loss(data_set, k_val, name, data))
 
+    def test_k_fold(self):
+        data = Data()
+        data_temp = pd.read_csv(r'data/abalone.data', header=None)
+        data_split = data.split_k_fold(10, data_temp) #  split into 10 dif parts
+        self.assertIs(len(data_split), 10) # check split into 2 groups
+        self.assertIs(len(data_split[0]), 2) # check that it split into test and train
+
+
+
+
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
 if __name__ == '__main__':
     unittest.main()
