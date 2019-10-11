@@ -37,7 +37,6 @@ class KMedoids:
         self.medoids_list = None  # contains a list of the Medoid instances
         self.data_name = None
         self.test = test
-        print(test)
         self.temp_med_list = None
         self.current_med = None
 
@@ -53,11 +52,11 @@ class KMedoids:
         decreasing = True
         temp = 0
         while decreasing:
-            print("while loop")
+            print("REPEAT")
             decreasing = self.find_best_fit()
             self.reset()
             if self.temp_med_list == self.medoids_list and temp > 4:
-                print("breaking")
+
                 break
             elif self.temp_med_list == self.medoids_list and temp < 4:
                 temp += 1
@@ -201,13 +200,12 @@ class KMedoids:
         return decreasing
 
     def predict(self, k):
-        print("-----Predicting-----")
+        print("----------Predicting----------")
         predict_list = []
 
         for index, row in self.test.iterrows():
             predict_list.append(self.find_k_closest_neighbors(row, k))
-        for p in predict_list:
-            print("Predicted Medoid ", p)
+        print(predict_list)
 
     def find_k_closest_neighbors(self, query, k):
         closest = None
