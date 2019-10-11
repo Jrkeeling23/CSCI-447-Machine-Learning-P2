@@ -90,7 +90,7 @@ class Data:
             # REMOVE VALS WHEN THE REMOVE FUNCTION IS APPLIED TO ONE OF THEM.   WHY GOD WHY
             data_to_combine = np.array_split(dataset, k_val)
             temp_list[0] = k__split_data[i]
-           # del data_to_combine[i]
+            del data_to_combine[i]
             temp_list[1] = pd.concat(data_to_combine)
             test_train_sets.append(temp_list)
             i += 1
