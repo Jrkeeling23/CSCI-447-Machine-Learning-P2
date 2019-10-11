@@ -16,6 +16,7 @@ def main():
     data = Data()  # loads the data and checks if complete
 
     while True:
+        data.load_data()
         data.split_data()  # split into both test and train
         predicted_class = {}  # holds data_set_name and a list of predicted classes
 
