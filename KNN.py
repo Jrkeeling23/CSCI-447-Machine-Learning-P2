@@ -1,3 +1,5 @@
+import random
+
 import pandas as pd
 import numpy as np
 from process_data import Data
@@ -200,4 +202,124 @@ class KNN:
 
 
 
+    def centroids(self, data_set, k_val):  # Method for K-Means
+        print("\n-----------------Starting K-Means Function-----------------")
+        # centroid_points = self.create_initial_clusters(self.k_random_rows(data_set,
+        #                                                                   k_val))  # Get random rows for centroid points then create the initial centroid point pd.DataFrames
+        centroid_points = self.k_random_point(data_set, k_val)
+
+        while True:
+            current_points = []  # A list of the current data points for a cluster
+            previous_points = centroid_points  # Sets a previous value to check if K-means has converged
+            clusters = []  # List of clusters for use below
+            initiate_list = 0
+            for point in centroid_points:  # Make a list of DataFrame clusters
+                clusters.append([])  # Instantiates a list for the clusters
+                clusters[initiate_list].append(point)  # Adds the centroid points to the list
+                initiate_list += 1
+            for _, data in data_set.iterrows():  # Loops through the rows of the data set
+                distance = None  # Initializes distance
+                current_closest_point = []  # Keeps track of the current closes point
+                iterator = 0
+                for centroid in centroid_points:  # Loops through the k centroid points
+                    euclid_distance = self.euclidean_distance(centroid,
+                                                              data)  # Gets the distance between the centroid and the data point
+                    if distance is None or euclid_distance < distance:  # Updates the distance to keep track of the closest point
+                        distance = euclid_distance
+                        current_closest_point = [data, iterator]
+                    iterator += 1
+                clusters[current_closest_point[1]].append(
+                    list(current_closest_point[0]))  # Appends the list to the clusters for specific centroids
+            for closest_cluster in clusters:  # Loops through the closest cluster list
+                current_points.append(closest_cluster)
+            centroid_points = self.get_new_cluster(
+                current_points)  # Calls the get new cluster function to get the mean values and run through the updated centroid points
+            print("Previous Clusters:")
+            print(pd.DataFrame(previous_points))
+            print("\nUpdated Clusters:")
+            print(pd.DataFrame(centroid_points))
+
+            if centroid_points == previous_points:
+                print("\n----------------- K-Means has converged! -----------------")
+                break
+
+        return centroid_points
+
+    def k_random_point(self, data_set, k_val):  # Method to grab k_random rows for centroid method
+        print("\n-----------------Getting K Random Cluster Points-----------------")
+        current_point = []  # List for current random point in loop
+        centroid_points = []  # List of centroid points type Series
+        for k in range(k_val):  # Grabs k Centroids
+            length = len(data_set[1]) - 1  # Gets the length of the dataframe
+            # Following row iteration with iteritems() sourced from https://stackoverflow.com/questions/28218698/how-to-iterate-over-columns-of-pandas-dataframe-to-run-regression/32558621 User: mdh and mmBs
+            for col in data_set.iteritems():  # Loops through columns
+                while True:  # While loop if random value is not found in column
+                    random_int = random.randint(0, length)  # Selects a random row
+                    try:
+                        current_point.append(col[1][random_int])  # Appends the column point to the current point list
+                        break
+                    except:
+                        pass
+
+            centroid_points.append(current_point)  # Appends the point to a list to be returned
+            current_point = []  # Resets current point
+
+        return centroid_points  # Returns a Series of centroid points
+
+    def get_new_cluster(self, current_clusters):  # Method to get the sum of values of the clusters
+        print("\n----------------- Updating K-Means Clusters -----------------\n")
+        mean_cluster = []  # Instantiates a list of the updated clusters
+        for cluster in current_clusters:  # Loop through the current clusters to get the sum of the values
+            current_point = []
+            cluster_length = len(cluster)  # Passed to mean_current_cluster
+            str_dict = {}  # Dictionary of the first column str labels
+            for point in cluster:  # Loop through each data point in a cluster
+                iterator = 0
+                for index in point:
+                    if type(index) is str:
+                        try:
+                            if index in str_dict.keys():
+                                str_dict[index] += 1  # Increments the count of a particular string
+                            else:
+                                str_dict[index] = 1  # Instantiates a value for a particular string
+                            current_point[iterator] = index  # Place holder in the list
+                        except:
+                            current_point.append(index)  # Place holder in the list
+                    elif type(index) is np.float64 or type(index) is float:  # Handles float values
+                        try:
+                            current_point[iterator] = current_point[iterator] + float(
+                                index)  # Sums the value for this particular column in the loop
+                        except:
+                            current_point.append(index)  # Instantiates a value for the index location
+
+                    elif type(index) is int or type(index) is np.int64:  # Handles Int values
+                        try:
+                            current_point[iterator] += index  # Sums the value for this column
+                        except:
+                            current_point.append(index)  # Instantiates a value for this location in the list.
+                    iterator += 1
+            mean_cluster.append(self.mean_current_cluster(cluster_length, current_point,
+                                                          str_dict))  # Appends the new cluster value to be returned.
+
+        return mean_cluster
+
+    def mean_current_cluster(self, cluster_length, current_point,
+                             str_dict):  # This function does the math for the new centroid
+        highest_char_count = 0  # Decided to use the highest occurring string.
+        if str_dict.keys().__len__() > 0:
+            iterator = 1
+        else:
+            iterator = 0
+        for char in str_dict.keys():  # Loops through the string dictionary
+            if str_dict[char] > highest_char_count:
+                highest_char_count = str_dict[char]
+                current_point[0] = char  # Sets the first location in the centroid list to the most occurring string.
+
+        for index in range(iterator, len(current_point)):  # Loops through the values for the mean of the cluster
+            current_point[
+                index] /= cluster_length  # Divides the sum by the length of the columns in the cluster data set.
+            if index == len(current_point) - 1:
+                current_point[index] = int(
+                    current_point[index])  # Last value in the data set is an INT. This is a type cast.
+        return current_point
 

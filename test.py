@@ -64,6 +64,16 @@ class Test(unittest.TestCase):
         self.assertIs(len(data_split), 10) # check split into 2 groups
         self.assertIs(len(data_split[0]), 2) # check that it split into test and train
 
+    def test_centroids(self):
+        print("Testing Centroid")
+        knn = KNN()
+        data = Data()
+        data.split_data()
+        knn.data = data
+        knn.current_data_set = 'abalone'  # used in KNN, needed here
+        self.assertEqual(knn.centroids(data.train_dict[knn.current_data_set], 4), True)
+        print("End Centroid Test")
+
 
 
 
