@@ -1,6 +1,7 @@
 import process_data as data
 import pandas as pd
 from KNN import KNN
+import math
 
 
 class LF:
@@ -37,3 +38,24 @@ class LF:
             print("\n--- KNN Classified ", zero_count, "Examples Correctly and ", one_count, "Incorrectly---")
             print("\n--- With total Zero One Loss of: ", (zero_count/one_count), "---")
             return zero_count/one_count  # total accuracy
+
+
+
+
+    def mean_squared_error(self, predicted_data, actual_data):
+        """
+        :param predicted_data:  list of predicted values for datapoints (assume same order)
+        :param actual_data: actual values for those said data points  (assume same order)
+        :return MSE from the predicted data
+         """
+        n = len(actual_data)  # get out n for MSE
+        sum = 0  # sum of the MSE squared values
+
+        for (predict, true) in (predicted_data, actual_data): # go through all the points at the same time
+            currentSum = (true - predict) ** 2  # square it
+            sum += currentSum # add current to total sum
+
+        # divide by n
+        sum = sum/2
+        return sum # done, return sum
+
