@@ -268,7 +268,7 @@ class KNN:
         return centroid_points  # Returns a Series of centroid points
 
     def get_new_cluster(self, current_clusters): # Method to get the sum of values of the clusters
-        print("\n----------------- Updating K-Means Clusters -----------------")
+        print("\n----------------- Updating K-Means Clusters -----------------\n")
         mean_cluster = [] # Instantiates a list of the updated clusters
         for cluster in current_clusters: # Loop through the current clusters to get the sum of the values
             current_point = []
