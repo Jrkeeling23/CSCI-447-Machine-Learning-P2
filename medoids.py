@@ -48,8 +48,9 @@ class KMedoids:
         decreasing = True
         while decreasing:
             print("while loop")
-
             decreasing = self.find_best_fit()
+
+        self.predit()
 
     def select_random(self, k):
         """
@@ -135,7 +136,7 @@ class KMedoids:
         if temp_medoid.cost < medoid.cost:  # if the temp medoid is a better fit, SWAP!
             print("swapping medoid with cost ", medoid.cost, " with the medoid whose cost is ", temp_medoid.cost)
             medoid.index = temp_medoid.index
-            medoid.cost = temp_medoid.index
+            medoid.cost = temp_medoid.cost
             medoid.medoid_point = temp_medoid.medoid_point
 
             return True
@@ -153,17 +154,18 @@ class KMedoids:
                     return True
         return False
 
-    def print_medoids(self, meds):
-        string = ''
-        for med in meds:
+    def print_medoids(self):
+        string = 'Medoids List: '
+        for med in self.medoids_list:
             string += str(med.index) + ", "
         print(string)
 
     def find_best_fit(self):
         decreasing = False
-        print("Medoids List: ", self.print_medoids(self.medoids_list))
+        self.print_medoids()
         self.assign_to_medoids(self.medoids_list)  # assign the remaining data points to its closest medoid
         for med in self.medoids_list:  # iterate through medoids
+            print("Current medoid Index that is being updated ", med.index)
             for index, row in self.df.iterrows():  # iterate though every point in the data set
                 if self.check_index(index, self.medoids_list, t_index=None):  # if index is a medoid
                     continue
