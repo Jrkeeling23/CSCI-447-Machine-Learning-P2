@@ -50,13 +50,17 @@ class Test(unittest.TestCase):
 
 
     def test_medoids(self):
+        data = Data()
         data_temp = pd.read_csv(r'data/abalone.data', header=None)
-        training_data_temp, test_data_temp = np.split(data_temp.sample(frac=1), [int(.8 * len(data_temp))])
+        training_data_temp, test_data_temp = np.split(data_temp.sample(n=400), [int(.8 * len(data_temp))])
+        data.test_dict = test_data_temp
+        data.train_dict = training_data_temp
+
         md = KMedoids(test_data_temp, training_data_temp)
         # md.data_name = 'abalone'
 
-        md.perform_medoids(2, 'abalone')
-        self.assertEqual(len(md.medoids_list), 2)
+        md.perform_medoids(5, 'abalone')
+        self.assertEqual(len(md.medoids_list), 5)
 
 
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html

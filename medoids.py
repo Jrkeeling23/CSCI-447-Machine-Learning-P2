@@ -2,11 +2,7 @@ import numpy as np
 import pandas as pd
 import random
 from process_data import Data
-
-
-# def get_label_col(data_name):
-#     col_loc = {'abalone': 8, 'car': 5, 'segmentation': 0, 'machine': 0, 'forest_fires': 12, 'wine': 0}
-#     return col_loc[data_name]
+from KNN import KNN
 
 
 def euclidean_distance(query_point, comparison_point, data_name):
@@ -30,8 +26,8 @@ def euclidean_distance(query_point, comparison_point, data_name):
 
 class KMedoids:
 
-    def __init__(self, data, test):
-        self.df = data
+    def __init__(self, test, train):
+        self.df = train
         self.medoids_list = None  # contains a list of the Medoid instances
         self.data_name = None
         self.test = test
@@ -49,8 +45,9 @@ class KMedoids:
         while decreasing:
             print("while loop")
             decreasing = self.find_best_fit()
+            self.reset()
 
-        self.predit()
+        self.predict(5)
 
     def select_random(self, k):
         """
@@ -68,11 +65,12 @@ class KMedoids:
         for index, row in self.df.iterrows():
             if self.check_index(index, self.medoids_list, t_index=None):
                 continue  # exclude to data points that are medoids
-            elif index not in medoids_list and index is not None:
+            else:
                 distance_dict = self.check_all_medoid_distances(row,
                                                                 medoids_list)  # check the row to medoids for
                 # (continued paragraph) closest distance
                 chosen_medoid, distance = self.sort_dict_by_value(distance_dict)
+
                 chosen_medoid.assign_to_medoid(index, distance, row)  # assign the index of the data point to the medoid
 
     def check_all_medoid_distances(self, query_point, medoids_list):
@@ -92,6 +90,7 @@ class KMedoids:
         :param sort_this: dictionary of distances from query point to medoids
         :return: closest medoid
         """
+
         first_iteration = True
         closest_medoid = None
         saved_closest = None
@@ -133,7 +132,7 @@ class KMedoids:
                 distance = euclidean_distance(v, temp_medoid.medoid_point, df_name)  # get the distance of the point
                 temp_medoid.cost += distance  # update the temporary medoids cost for distortion
 
-        if temp_medoid.cost < medoid.cost:  # if the temp medoid is a better fit, SWAP!
+        if temp_medoid.cost < medoid.cost and temp_medoid.cost is not 0:  # if the temp medoid is a better fit, SWAP!
             print("swapping medoid with cost ", medoid.cost, " with the medoid whose cost is ", temp_medoid.cost)
             medoid.index = temp_medoid.index
             medoid.cost = temp_medoid.cost
@@ -177,6 +176,52 @@ class KMedoids:
                     else:
                         continue
         return decreasing
+
+    def predict(self, k):
+        print("-----Predicting-----")
+        predict_list = []
+
+        for index, row in self.test.iterrows():
+            predict_list.append(self.find_k_closest_medoids(row, k))
+        for p in predict_list:
+            print("Predicted Medoid ", p)
+
+    def find_k_closest_medoids(self, query, k):
+        closest = None
+        distance_dict = {}
+        index_dict = {}
+        for row, index in self.df:
+            distance_dict[index] = euclidean_distance(query, row, self.data_name)
+
+        count = 0
+        for key, value in sorted(distance_dict.items(), key=lambda item: item[1]):
+            if count > k:
+                break
+            else:
+                index_dict[key] = value
+                count += 1
+        pred = self.predict_k_mediods(index_dict)
+        return pred
+
+    def predict_k_mediods(self, distance_dict):
+
+        freq_dict = {}
+        first_itertion = True
+        for med, dist in distance_dict.items():
+            if not first_itertion:
+                if med.index in freq_dict.keys():
+                    freq_dict[med.index] += 1
+                else:
+                    freq_dict[med.index] = 1
+            else:
+                freq_dict[med.index] = 1
+
+        key, value = sorted(freq_dict.items(), key=lambda item: item[1])
+        return key.index
+
+    def reset(self):
+        for med in self.medoids_list:
+            med.reset_cost()
 
 
 class Medoids:
