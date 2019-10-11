@@ -206,7 +206,6 @@ class KNN:
         print("\n-----------------Starting K-Means Clustering Centroids-----------------")
         # centroid_points = self.create_initial_clusters(self.k_random_rows(data_set,
         #                                                                   k_val))  # Get random rows for centroid points then create the initial centroid point pd.DataFrames
-        print("\n-----------------Getting K Random Centroid Points-----------------")
         centroid_points = self.k_random_point(data_set, k_val)
 
         while True:
@@ -247,7 +246,7 @@ class KNN:
         return centroid_points
 
     def k_random_point(self, data_set, k_val):  # Method to grab k_random rows for centroid method
-        print("\n-----------------Finding Centroids-----------------")
+        print("\n-----------------Getting K Random Cluster Points-----------------")
         current_point = []  # List for current random point in loop
         centroid_points = []  # List of centroid points type Series
         for k in range(k_val):  # Grabs k Centroids
