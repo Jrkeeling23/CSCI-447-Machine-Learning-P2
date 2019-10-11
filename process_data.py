@@ -67,6 +67,9 @@ class Data:
                 self.train_dict[data_set_name] = training_data_temp
                 self.test_dict[data_set_name] = test_data_temp
 
+
+
+
     def split_k_fold(self, k_val, dataset):
         """
         Split data into list of K different parts
@@ -74,15 +77,12 @@ class Data:
         :return: list of lists where arranged as follows [[train,test], [train, test]] repeated k times
         where train is traing data (index 0) and test is testing data (index 1)
         """
-        k__split_data = np.array_split(dataset, k_val)  # splits dataset into k parts
+        k__split_data = np.array_split(dataset, k_val) # splits dataset into k parts
         # now we need to split up data into 1 list and k others combined into 1 list for test/train
-
         test_train_sets = []
         temp_list = [None] * 2
         length = len(k__split_data)
-
         # create these new lists and add them to test_train_sets
-
         for i in range(length):  # go through every split list
             # APPARENTLY PYTHON DEVS THOUGHT IT WAS A GOOD FUCKING IDEA TO MAKE LISTS THAT HAVE DIFFERENT NAMES BOTH
             # REMOVE VALS WHEN THE REMOVE FUNCTION IS APPLIED TO ONE OF THEM.   WHY GOD WHY

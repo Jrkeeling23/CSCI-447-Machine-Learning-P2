@@ -3,6 +3,7 @@ from KNN import KNN
 import pandas as pd
 from process_data import Data
 from loss_functions import LF
+import numpy as np
 from medoids import KMedoids
 
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html

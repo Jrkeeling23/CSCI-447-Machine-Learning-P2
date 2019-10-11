@@ -5,9 +5,15 @@ from process_data import Data
 from KNN import KNN
 
 
+def get_label_col(data_name):
+    col_loc = {'abalone': 8, 'car': 5, 'segmentation': 0, 'machine': 0, 'forest_fires': 12, 'wine': 0}
+    return col_loc[data_name]
+
+
 def euclidean_distance(query_point, comparison_point, data_name):
     """
     Performs the Euclidean distance function
+    :param data_name:
     :param query_point: a data point
     :param comparison_point: a comparison point
     :param df: used to get the label columns
@@ -15,7 +21,7 @@ def euclidean_distance(query_point, comparison_point, data_name):
     """
     temp_add = 0  # (x2-x1)^2 + (y2 - y1)^2 ; addition part
     for feature_col in range(len(query_point)):
-        if Data.get_label_col(data_name) is feature_col:
+        if get_label_col(data_name) is feature_col:
             continue
         if type(query_point[feature_col]) is float or type(query_point[feature_col]) is int:
             temp_sub = (query_point[feature_col] - comparison_point[feature_col]) ** 2  # x2 -x1 and square
@@ -50,7 +56,7 @@ class KMedoids:
             print("while loop")
             decreasing = self.find_best_fit()
             self.reset()
-            if self.temp_med_list == self.medoids_list and temp >4:
+            if self.temp_med_list == self.medoids_list and temp > 4:
                 print("breaking")
                 break
             elif self.temp_med_list == self.medoids_list and temp < 4:
@@ -159,7 +165,7 @@ class KMedoids:
         for med in medoids_list:
             if t_index is not None:
                 self.medoids_list = temp
-                if index == med.index or index == t_index :
+                if index == med.index or index == t_index:
                     return True
             else:
                 if index == med.index:
@@ -221,13 +227,13 @@ class KMedoids:
         pred = self.predict_k_mediods(meds_dict)
         return pred
 
-    def get_clostest_med(self,index_dict):
+    def get_clostest_med(self, index_dict):
         meds_dict = {}
         for j in list(index_dict.keys()):
 
             for med in self.medoids_list:
-                 if j in list(med.encompasses.keys()):
-                     meds_dict[j] = med
+                if j in list(med.encompasses.keys()):
+                    meds_dict[j] = med
         return meds_dict
 
     def predict_k_mediods(self, distance_dict):
@@ -244,7 +250,6 @@ class KMedoids:
 
         for key, value in sorted(freq_dict.items(), key=lambda item: item[1]):
             return key.index
-
 
     def reset(self):
         for med in self.medoids_list:
