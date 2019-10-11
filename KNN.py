@@ -115,7 +115,7 @@ class KNN:
         self.current_data_set = name
         # prev_set = data_set
         data_set_perform = 0  # for getting an initial measure on performance
-        for index, row in data_set.iterrows:  # loops through the validation set and if it matches, then it adds one to the score
+        for index, row in data_set.iterrows():  # loops through the validation set and if it matches, then it adds one to the score
             knn = self.perform_knn(row, data_set, k_value, self.current_data_set, validation)
             if knn == row[self.data.get_label_col(self.current_data_set)]:
                 data_set_perform+=1
@@ -135,6 +135,8 @@ class KNN:
                 knn = self.perform_knn(row, data_set, k_value, self.current_data_set, validation)
                 if knn == row[self.data.get_label_col(self.current_data_set)]:
                     data_set_perform += 1
+        print("Prev Set")
+        print(prev_set)
         return prev_set  # returns the set with the best performance
 
 
