@@ -236,15 +236,16 @@ class KNN:
             centroid_points = self.get_new_cluster(
                 current_points)  # Calls the get new cluster function to get the mean values and run through the updated centroid points
             print("Previous Centroids:")
-            print(previous_points)
+            print(pd.DataFrame(previous_points))
             print("Updated Centroids:")
-            print(centroid_points)
+            print(pd.DataFrame(centroid_points))
 
             if centroid_points == previous_points:
                 print("\n----------------- K-Means has converged! -----------------")
                 break
 
-        return centroid_points
+        # return centroid_points
+        return True
 
     def k_random_point(self, data_set, k_val):  # Method to grab k_random rows for centroid method
         print("\n-----------------Finding Centroids-----------------")
