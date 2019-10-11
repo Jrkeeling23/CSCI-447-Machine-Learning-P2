@@ -1,6 +1,6 @@
 """
 CSCI-447 Machine Learning
-Justin Keeling, Alex Harry, Andrew Smith, John Lambrect
+Justin Keeling, Alex Harry, Andrew Smith, John Lambrecht
 11 Oct 2019
 """
 from process_data import Data
