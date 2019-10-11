@@ -51,11 +51,10 @@ class LF:
         n = len(actual_data)  # get out n for MSE
         sum = 0  # sum of the MSE squared values
 
-        for (predict, true) in (predicted_data, actual_data): # go through all the points at the same time
-            currentSum = (true - predict) ** 2  # square it
-            sum += currentSum # add current to total sum
+        for i in range(len(predicted_data)):  # go through all the points at the same time
+            currentSum = (actual_data[i] - predicted_data[i]) ** 2  # square it
+            sum += currentSum  # add current to total sum
 
         # divide by n
-        sum = sum/2
-        return sum # done, return sum
-
+        sum = sum / n
+        return sum  # done, return sum
