@@ -203,7 +203,7 @@ class KNN:
         return condensed_data
 
     def centroids(self, data_set, k_val):  # Method for K-Means
-        print("\n-----------------Starting K-Means Clustering Centroids-----------------")
+        print("\n-----------------Starting K-Means Function-----------------")
         # centroid_points = self.create_initial_clusters(self.k_random_rows(data_set,
         #                                                                   k_val))  # Get random rows for centroid points then create the initial centroid point pd.DataFrames
         centroid_points = self.k_random_point(data_set, k_val)
