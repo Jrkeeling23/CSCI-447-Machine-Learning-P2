@@ -330,15 +330,17 @@ class KNN:
             distance = None  # Initializes distance
             closest_centroid = None  # Keeps track of the current closes centroid cluster
             closest_centroid_euclidian_distance = None # Keeps track of the closest euclidian distance.
+            cluster_val = 1
             for centroid in centroids:  # Loops through the k centroid points
                 euclid_distance = self.euclidean_distance(centroid,
                                                           data)  # Gets the distance between the centroid and the data point
 
                 if distance is None or euclid_distance < distance:  # Updates the distance to keep track of the closest point
                     distance = euclid_distance
-                    closest_centroid = centroid
+                    # closest_centroid = centroid
+                    closest_centroid = cluster_val
                     closest_centroid_euclidian_distance = distance
+                cluster_val += 1
             # Print closest cluster to the test data point.
             print("\nEuclidian Distance to Closest K-Means Cluster: ", closest_centroid_euclidian_distance)
-            print("Closest Centroid: ")
-            print(closest_centroid)
+            print("Closest Cluster: Cluster ", closest_centroid )
