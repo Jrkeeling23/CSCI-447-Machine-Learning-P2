@@ -53,7 +53,7 @@ class Test(unittest.TestCase):
         data.split_data()
         knn.data = data
         knn.current_data_set = 'abalone'  # used in KNN, needed here
-        self.assertEqual(knn.centroids(data.train_dict[knn.current_data_set], 11), True)
+        self.assertEqual(knn.centroids(data.train_dict[knn.current_data_set], 4), True)
         print("End Centroid Test")
 
 
