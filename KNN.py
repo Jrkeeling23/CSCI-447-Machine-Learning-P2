@@ -235,9 +235,9 @@ class KNN:
                 current_points.append(closest_cluster)
             centroid_points = self.get_new_cluster(
                 current_points)  # Calls the get new cluster function to get the mean values and run through the updated centroid points
-            print("Previous Centroids:")
+            print("Previous Clusters:")
             print(pd.DataFrame(previous_points))
-            print("\nUpdated Centroids:")
+            print("\nUpdated Clusters:")
             print(pd.DataFrame(centroid_points))
 
             if centroid_points == previous_points:
