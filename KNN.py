@@ -69,7 +69,8 @@ class KNN:
 
             if self.data.get_label_col(self.current_data_set) is feature_col:
                 continue
-            if type(query_point[feature_col]) is float or type(query_point[feature_col]) is int or type(query_point[feature_col]) is np.float64:
+            if type(query_point[feature_col]) is float or type(query_point[feature_col]) is int or type(
+                    query_point[feature_col]) is np.float64:
                 temp_sub = (query_point[feature_col] - comparison_point[feature_col]) ** 2  # x2 -x1 and square
                 temp_add += temp_sub  # continuously add until square root
 
@@ -207,19 +208,20 @@ class KNN:
         #                                                                   k_val))  # Get random rows for centroid points then create the initial centroid point pd.DataFrames
         print("\n-----------------Getting K Random Centroid Points-----------------")
         centroid_points = self.k_random_point(data_set, k_val)
-        current_points = []
 
-        clusters = [] # List of cluster pd.DataFrames
-        initiate_list = 0
-        for point in centroid_points: # Make a list of DataFrame clusters
-            clusters.append([])
-            clusters[initiate_list].append(list(point))
-            initiate_list += 1
         new_clusters = []
         while True:
+            current_points = []
+            previous_points = centroid_points
+            clusters = []  # List of cluster pd.DataFrames
+            initiate_list = 0
+            for point in centroid_points:  # Make a list of DataFrame clusters
+                clusters.append([])
+                clusters[initiate_list].append(point)
+                initiate_list += 1
             previous_clusters = []
             for _, data in data_set.iterrows():
-                distance  = None
+                distance = None
                 current_closest_point = []
                 iterator = 0
                 for centroid in centroid_points:
@@ -228,12 +230,23 @@ class KNN:
                     # print(centroid)
                     if distance is None or euclid_distance < distance:
                         distance = euclid_distance
-                        current_closest_point = [centroid, iterator]
+                        current_closest_point = [data, iterator]
                     iterator += 1
                 clusters[current_closest_point[1]].append(list(current_closest_point[0]))
             for closest_cluster in clusters:
-                current_points.append(pd.DataFrame(closest_cluster))
-            break
+                current_points.append(closest_cluster)
+                # print(pd.DataFrame(closest_cluster))
+            centroid_points = self.get_new_cluster(current_points)
+            print("Centroid points: ")
+            print(centroid_points)
+            print("Previous points: ")
+            print(previous_points)
+            if centroid_points == previous_points:
+
+                print("Breaking Mean Clusters")
+                break
+            else:
+                print("Still looping")
 
         return True
 
@@ -253,9 +266,54 @@ class KNN:
                     except:
                         pass
 
-            centroid_points.append(pd.Series(current_point))  # Appends the point to a list to be returned
+            centroid_points.append(current_point)  # Appends the point to a list to be returned
             current_point = []  # Resets current point
 
         return centroid_points  # Returns a Series of centroid points
 
+    def get_new_cluster(self, current_clusters):
+        print("\n----------------- Getting new K-Means Clusters -----------------")
+        mean_cluster = []
+        for cluster in current_clusters:
+            current_point = []
+            cluster_length = len(cluster)
+            str_dict = {}
+            for point in cluster:
+                iterator = 0
+                for index in point:
+                    if type(index) is str:
+                        # TODO figure out string
+                        try:
+                            if index in str_dict.keys():
+                                str_dict[index] += 1
+                            else:
+                                str_dict[index] = 1
+                            current_point[iterator] = index
+                        except:
+                            current_point.append(index)
+                    elif type(index) is np.float64 or type(index) is float:
+                        try:
+                            current_point[iterator] = current_point[iterator] + float(index)
+                        except:
+                            current_point.append(index)
 
+                    elif type(index) is int or type(index) is np.int64:
+                        try:
+                            current_point[iterator] += index
+                        except:
+                            current_point.append(index)
+                    iterator += 1
+            mean_cluster.append(self.mean_current_cluster(cluster_length, current_point, str_dict))
+
+        return mean_cluster
+    def mean_current_cluster(self, cluster_length, current_point, str_dict):
+        highest_char_count = 0
+        for char in str_dict.keys():
+            if str_dict[char] > highest_char_count:
+                highest_char_count = str_dict[char]
+                current_point[0] = char
+        for index in range(1, len(current_point)):
+            current_point[index] /= cluster_length
+            if index == len(current_point) - 1:
+                current_point[index] = int(current_point[index])
+        return current_point
