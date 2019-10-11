@@ -3,6 +3,7 @@ from KNN import KNN
 import pandas as pd
 from process_data import Data
 from medoids import KMedoids
+import numpy as np
 from pandas.util.testing import assert_frame_equal
 
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
@@ -47,36 +48,16 @@ class Test(unittest.TestCase):
 
         self.assertGreater(len(data_set.index),len(cond_data.index))
 
-    def test_select_random_k(self):
-        data_temp = pd.read_csv(r'data/abalone.data', header=None)
-        md = KMedoids(data_temp)
-        rand = md.select_random(5)
-        check = rand.isin(md.df).all()
-        testing = True
-        for bool in check:
-            if bool is False:
-                testing = True
-        self.assertTrue(testing)
-
-    def test_select_random_k_size(self):
-        data_temp = pd.read_csv(r'data/abalone.data', header=None)
-        md = KMedoids(data_temp)
-        rand = md.select_random(5)
-        self.assertEqual(rand.shape[0], 5)
-
-    def test_assigning_medoids_instance_creation(self):
-        data_temp = pd.read_csv(r'data/abalone.data', header=None)
-        md = KMedoids(data_temp)
-        # md.data_name = 'abalone'
-        md.perform_medoids(5,'abalone')
-        self.assertEqual(len(md.medoids_list), 5)
 
     def test_medoids(self):
         data_temp = pd.read_csv(r'data/abalone.data', header=None)
-        md = KMedoids(data_temp)
+        training_data_temp, test_data_temp = np.split(data_temp.sample(frac=1), [int(.8 * len(data_temp))])
+        md = KMedoids(test_data_temp)
         # md.data_name = 'abalone'
-        md.perform_medoids(5, 'abalone')
-        self.assertEqual(len(md.medoids_list), 5)
+
+        md.perform_medoids(2, 'abalone')
+        self.assertEqual(len(md.medoids_list), 2)
+
 
 # Source to understand how to test in python: https://pymbook.readthedocs.io/en/latest/testing.html and https://docs.python.org/2/library/unittest.html
 if __name__ == '__main__':

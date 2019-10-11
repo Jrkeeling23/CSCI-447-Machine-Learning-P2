@@ -30,10 +30,11 @@ def euclidean_distance(query_point, comparison_point, data_name):
 
 class KMedoids:
 
-    def __init__(self, data):
+    def __init__(self, data, test):
         self.df = data
         self.medoids_list = None  # contains a list of the Medoid instances
         self.data_name = None
+        self.test = test
 
     def perform_medoids(self, k, data_name):
         """
@@ -44,20 +45,11 @@ class KMedoids:
         """
         self.data_name = data_name  # assigns the current data set being used for label column purposes
         self.select_random(k)  # select random data points to represent the medoids
-        self.assign_to_medoids(self.medoids_list)  # assign the remaining data points to its closest medoid
-        print(self.medoids_list)
-        continue_value = 0
-        while continue_value is not 10:
-            print(self.medoids_list)
-            for med in self.medoids_list:
-                print(med)
-                continue_bool = self.temp_swap(med)
-                print(continue_bool)
-                if continue_bool:
-                    continue_value = 0
-                else:
-                    continue_value += 1
+        decreasing = True
+        while decreasing:
+            print("while loop")
 
+            decreasing = self.find_best_fit()
 
     def select_random(self, k):
         """
@@ -73,20 +65,20 @@ class KMedoids:
         :return:
         """
         for index, row in self.df.iterrows():
-            if index in medoids_list:
+            if self.check_index(index, self.medoids_list, t_index=None):
                 continue  # exclude to data points that are medoids
             elif index not in medoids_list and index is not None:
                 distance_dict = self.check_all_medoid_distances(row,
                                                                 medoids_list)  # check the row to medoids for
                 # (continued paragraph) closest distance
                 chosen_medoid, distance = self.sort_dict_by_value(distance_dict)
-                chosen_medoid.assign_to_medoid(index, distance)  # assign the index of the data point to the medoid
+                chosen_medoid.assign_to_medoid(index, distance, row)  # assign the index of the data point to the medoid
 
     def check_all_medoid_distances(self, query_point, medoids_list):
         """
         calculate the Euclidean distances from the query point to the medoid
         :param query_point:
-        :return:  distance
+        :return:  distance dictionary
         """
         distances = {}  # dict to hold the indexes and the distances
         for med in medoids_list:
@@ -95,7 +87,7 @@ class KMedoids:
 
     def sort_dict_by_value(self, sort_this):
         """
-        determines the closest medoid to query point
+        determines the closest medoid to the query point
         :param sort_this: dictionary of distances from query point to medoids
         :return: closest medoid
         """
@@ -123,58 +115,66 @@ class KMedoids:
         """
         self.medoids_list = []
         for index, row in medoids.iterrows():
-            self.medoids_list.append(Medoids(row, index))
+            self.medoids_list.append(Medoids(row, index))  # initialize a new medoid and assign to the medoids list
 
-    def select_random_non_medoid(self, encompassed):
+    def swap(self, medoid, temp_medoid, df_name):
         """
-        Selects a random point to check if it is a better fit than another medoid
-        :return: row and index to use.
+        finds cost of a possible medoid
+        :param temp_medoid: point from df not in medoids list
+        :param df_name: the name of data set for euclidean distance parameter
+        :param df: the actual data set to get row from encompassed points
+        :return: Boolean to infer a swap to caller function
         """
-        index = None
-        while (index in self.medoids_list) or index is None:
-            index = random.choice(list(encompassed.keys()))
-        row = self.df.index(index)  # TODO: get the row from index FIX THIS BUG. Should be easy
-        return row, index
+        for k, v in medoid.encompasses.items():  # iterate through all encompassed medoids
+            if self.check_index(k, self.medoids_list, temp_medoid.index):  # if index is medoid or is a temp medoid
+                continue
+            else:
+                distance = euclidean_distance(v, temp_medoid.medoid_point, df_name)  # get the distance of the point
+                temp_medoid.cost += distance  # update the temporary medoids cost for distortion
 
-    def swap(self, initial_cost, new_cost):
-        result = initial_cost - new_cost
-        if result < 0:
+        if temp_medoid.cost < medoid.cost:  # if the temp medoid is a better fit, SWAP!
+            print("swapping medoid with cost ", medoid.cost, " with the medoid whose cost is ", temp_medoid.cost)
+            medoid.index = temp_medoid.index
+            medoid.cost = temp_medoid.index
+            medoid.medoid_point = temp_medoid.medoid_point
+
             return True
         else:
+            # print("NOT swapping medoid with cost ", medoid.cost, " with the medoid whose cost is ", temp_medoid.cost)
             return False
 
-    def temp_swap(self, med):
-        """
-        temporarily swap a medoid for a
-        :return:
-        """
-        self.reset_cost(self.medoids_list)
-        have_swapped = False
-        temp_medoids_list = self.medoids_list.copy()  # make a copy to not overwrite current medoids
-        temp_medoids_list.remove(med)  # remove the specific medoid to try another one
-        row, index = self.select_random_non_medoid(med.encompasses)  # get a non medoid from the current medoid
-        print("row " , row)
-        print("index" , index)
-        temp_medoid = Medoids(row, index)  # create a medoid
-        temp_medoids_list.append(temp_medoid)  # add the potential medoid to list
-        print("temp list = ", temp_medoids_list)
-        self.assign_to_medoids(temp_medoids_list)
-
-        if self.swap(med.cost, temp_medoid):
-            have_swapped = True
-            self.medoids_list = temp_medoids_list
-            del med
-        else:
-            del temp_medoid
-        return have_swapped
-
-    @staticmethod
-    def reset_cost(medoids_list):
+    def check_index(self, index, medoids_list, t_index):
         for med in medoids_list:
-            med.reset_cost()  # reset distances
+            if t_index is not None:
+                if index == med.index or index == t_index:
+                    return True
+            else:
+                if index == med.index:
+                    return True
+        return False
 
-    # TODO: function that will be called after data points have been assigned to a medoid.... it will have a while
-    #  loop that will continue iterating until medoid points do not change.
+    def print_medoids(self, meds):
+        string = ''
+        for med in meds:
+            string += str(med.index) + ", "
+        print(string)
+
+    def find_best_fit(self):
+        decreasing = False
+        print("Medoids List: ", self.print_medoids(self.medoids_list))
+        self.assign_to_medoids(self.medoids_list)  # assign the remaining data points to its closest medoid
+        for med in self.medoids_list:  # iterate through medoids
+            for index, row in self.df.iterrows():  # iterate though every point in the data set
+                if self.check_index(index, self.medoids_list, t_index=None):  # if index is a medoid
+                    continue
+                else:  # not a medoid
+                    temp_med = Medoids(row, index)  # create a temporary medoid
+                    swap = self.swap(med, temp_med, self.data_name)  # swap the medoids
+                    if swap is True:  # if swap took place, perform swap!
+                        decreasing = True
+                    else:
+                        continue
+        return decreasing
 
 
 class Medoids:
@@ -190,23 +190,18 @@ class Medoids:
         self.index = index
         self.cost = 0  # individual medoid cost
 
-    def assign_to_medoid(self, index, distance):
+    def assign_to_medoid(self, index, distance, row):
         """
         Assigns data to the medoid
         :param index: index of data
         :return:
         """
-        self.encompasses[index] = distance
+        self.encompasses[index] = row
         self.cost += distance
 
-
-    def change_medoid_point(self):
-        # TODO: Once the data points have been assigned to a medoid, a better data_point may need to be used instead!
-        pass
-
-    def check_for_better_fit(self, df):
-        # TODO: Function that will check the medoid's encompassed data points for a better fit.
-
-        pass
     def reset_cost(self):
+        """
+        reset the costs when recalculating the cost of medoids
+        :return:
+        """
         self.cost = 0
